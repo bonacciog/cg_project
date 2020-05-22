@@ -80,11 +80,11 @@ function CarDoStep(){
 // // disegna una ruota come due cubi intersecati a 45 gradi
  function drawWheel(){
   mo_matrix1=m4.scale(mo_matrix1,1, 1.0/Math.sqrt(2.0),  1.0/Math.sqrt(2.0));
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
   drawCube();
 
   mo_matrix1=m4.xRotate(mo_matrix1, degToRad(45));
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
   drawCube();
  }
 
@@ -123,32 +123,9 @@ function drawCarlinga(model_matrix){
   // vado al frame pezzo_A
   mo_matrix1=m4.copy(model_matrix);
   mo_matrix1=m4.scale(mo_matrix1, 0.25 , 0.14 , 1);
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
+
   drawCube();
- 
-// // disegna altri 3 cubi traslati escalati per carlinga
-// // scommentare
-//   mo_matrix1=m4.copy(model_matrix);
-//   // vado frame pezzo_B
-//   mo_matrix1=m4.translate(mo_matrix1,0,-0.11,-0.95);
-//   mo_matrix1=m4.scale(mo_matrix1,0.6, 0.05, 0.15);
-//   gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
-//   drawCube();
-
-//   mo_matrix1=m4.copy(model_matrix);
-//   // vado frame pezzo_C
-//   mo_matrix1=m4.translate(mo_matrix1,0,-0.11,0);
-//   mo_matrix1=m4.scale(mo_matrix1,0.6, 0.05, 0.3);
-//   gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
-//   drawCube();
-
-//   mo_matrix1=m4.copy(model_matrix);
-//   // vado frame pezzo_D
-//   mo_matrix1=m4.xRotate(mo_matrix1, degToRad(-5));
-//   mo_matrix1=m4.translate(mo_matrix1,0,+0.2,+0.95);
-//   mo_matrix1=m4.scale(mo_matrix1,0.6, 0.05, 0.3);
-//   gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
-//   drawCube();
 }
 
 // disegna Car
@@ -172,7 +149,7 @@ function CarRender() {
   mo_matrix1=m4.translate(mo_matrix1,0.58,+raggioRuotaP-0.28,+0.8);
   mo_matrix1=m4.xRotate(mo_matrix1, degToRad(mozzoP));
   mo_matrix1=m4.scale(mo_matrix1,0.1, raggioRuotaP, raggioRuotaP);
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
 //  drawCube();
   drawWheel();
 
@@ -181,7 +158,7 @@ function CarRender() {
   mo_matrix1=m4.translate(mo_matrix1,-0.58,+raggioRuotaP-0.28,+0.8);
   mo_matrix1=m4.xRotate(mo_matrix1,degToRad(mozzoP));
   mo_matrix1=m4.scale(mo_matrix1,0.1, raggioRuotaP, raggioRuotaP);
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
 //  drawCube();
   drawWheel();
 
@@ -191,7 +168,7 @@ function CarRender() {
   mo_matrix1=m4.yRotate(mo_matrix1,degToRad(sterzo));
   mo_matrix1=m4.xRotate(mo_matrix1,degToRad(mozzoA));
   mo_matrix1=m4.scale(mo_matrix1,0.08, raggioRuotaA, raggioRuotaA);
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
 //  drawCube();
   drawWheel();
 
@@ -201,7 +178,7 @@ function CarRender() {
   mo_matrix1=m4.yRotate(mo_matrix1,degToRad(sterzo));
   mo_matrix1=m4.xRotate(mo_matrix1,degToRad(mozzoA));
   mo_matrix1=m4.scale(mo_matrix1,0.08, raggioRuotaA, raggioRuotaA);
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv( gl.getUniformLocation(shaderprogram,"modelViewMatrix"), false, mo_matrix1 );
 //  drawCube();
   drawWheel();
 }

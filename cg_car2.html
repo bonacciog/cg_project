@@ -1,0 +1,464 @@
+<!doctype html>
+<html>
+
+<head>
+  <!--per ricaricare sempre la pagina da zero e non usare la cache-->
+  <META HTTP-EQUIV=”Pragma” CONTENT=”no-cache”>
+  <META HTTP-EQUIV=”Cache-Control” CONTENT=”no-cache”>
+  <!--per definire la dimensione e posizione dell'elemento canvas;
+        se i valori di width ed height inpostati qui sono superiori a
+        corrispondenti settati in <canvas width= .. height=.. l'immagine
+        verra' adattata ingrandendola, mentre se i valori sono inferiori,
+        l'immagine verra' adattata rimpicciolendola
+      -->
+  <!-- 
+      <body>         
+          <style type="text/css">
+             canvas { border: 2px solid blue; }
+          </style>
+      </body>
+-->
+  <style>
+    body {
+      background: #dddddd;
+    }
+
+    #my_Canvas {
+      margin: 10px;
+      padding: 10px;
+      background: #ffffff;
+      border: thin inset #aaaaaa;
+    }
+
+    .container {
+      /*to manage text on canvas and webgl */
+      position: relative;
+    }
+
+    #text {
+      /*to manage text on canvas and webgl */
+      background-color: transparent;
+      /* needed because we setcanvas bg color to white */
+      position: absolute;
+      left: 100px;
+      top: 10px;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+  <p> </p>
+  <button id="Button1">Increase D</button>
+  <button id="Button2">Decrease D</button>
+  <button id="Button3">Increase Zm</button>
+  <button id="Button4">Decrease Zm</button>
+  <button id="Button5">Increase fov</button>
+  <button id="Button6">Decrease fov</button>
+  <p> </p>
+
+  <div class="container">
+    <canvas width="600" height="600" id="my_Canvas"></canvas>
+    <!-- to manage text on canvas and webgl -->
+    <canvas width="600" height="150" id="text"></canvas>
+
+    <script id="vertex-shader" type="not-javascript">
+      attribute  vec4 vPosition;
+      attribute  vec3 vNormal;
+      varying vec4 fColor;
+      
+      uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+      uniform mat4 modelViewMatrix;
+      uniform mat4 projectionMatrix;
+      uniform vec4 lightPosition;
+      uniform float shininess;
+      void main()
+      {  
+          vec3 pos = -(modelViewMatrix * vPosition).xyz;
+          
+          //fixed light postion
+          
+          vec3 light = lightPosition.xyz;
+          vec3 L = normalize( light - pos );
+      
+        
+          vec3 E = normalize( -pos );
+          vec3 H = normalize( L + E );
+          
+          vec4 NN = vec4(vNormal,0);
+      
+          // Transform vertex normal into eye coordinates
+             
+          vec3 N = normalize( (modelViewMatrix*NN).xyz);
+      
+          // Compute terms in the illumination equation
+          vec4 ambient = ambientProduct;
+      
+          float Kd = max( dot(L, N), 0.0 );
+          vec4  diffuse = Kd*diffuseProduct;
+      
+          float Ks = pow( max(dot(N, H), 0.0), shininess );
+          vec4  specular = Ks * specularProduct;
+          
+          if( dot(L, N) < 0.0 ) {
+        specular = vec4(0.0, 0.0, 0.0, 1.0);
+          } 
+      
+          gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+          fColor = ambient + diffuse + specular;
+          
+          fColor.a = 1.0;
+      }
+</script>
+
+    <script id="fragment-shader" type="not-javascript">
+  precision mediump float;
+  varying vec4 fColor;
+  void main()
+  {
+      gl_FragColor = fColor;
+  }
+</script>
+
+    <script type="text/javascript" src="resources/webgl-utils.js"></script>
+    <script type="text/javascript" src="resources/m4.js"></script>
+    <script src="./car2.js"></script>
+    <script>
+      function quad(a, b, c, d) {
+
+        var t1 = m4.subtractVectors(vertices[b], vertices[a]);
+        var t2 = m4.subtractVectors(vertices[c], vertices[b]);
+        var normal = [];
+        normal = m4.cross(t1, t2, normal);
+
+        pointsArray.push(vertices[a]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[b]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[c]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[a]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[c]);
+        normalsArray.push(normal);
+        pointsArray.push(vertices[d]);
+        normalsArray.push(normal);
+      }
+
+
+      function colorCube() {
+        quad(1, 0, 3, 2);
+        quad(2, 3, 7, 6);
+        quad(3, 0, 4, 7);
+        quad(6, 5, 1, 2);
+        quad(4, 5, 6, 7);
+        quad(5, 4, 0, 1);
+      }
+
+      function drawCube() {
+        gl.enableVertexAttribArray(vNormal);
+        gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
+        gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
+        
+
+        
+        gl.enableVertexAttribArray(_position);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+        gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
+
+        gl.drawArrays( gl.TRIANGLES, 0, pointsArray.length );       
+
+      }
+
+      /* function drawFloor() {
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
+        gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(_position);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer3);
+        gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(_color);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer3);
+        gl.drawElements(gl.TRIANGLES, indices3.length, gl.UNSIGNED_SHORT, 0);
+      } */
+      
+      var mo_matrix, mo_matrix1;
+      /*============= Creating a canvas ======================*/
+      var canvas = document.getElementById('my_Canvas');
+      gl = canvas.getContext('webgl');
+      //to manage text on canvas and webgl
+      // look up the text canvas.
+      var textCanvas = document.getElementById("text");
+      // make a 2D context for it
+      var ctx = textCanvas.getContext("2d");
+
+      /*========== Defining and storing the geometry ==========*/
+      var numVertices  = 36;
+
+      var pointsArray = [];
+      var normalsArray = [];
+
+      var vertices = [
+        [-1.0, -1.0, -1.0, 1.0,],
+        [1.0, -1.0, -1.0, 1.0,],
+        [1.0, 1.0, -1.0, 1.0,],
+        [-1.0, 1.0, -1.0, 1.0,],
+        [-1.0, -1.0, 1.0, 1.0,],
+        [1.0, -1.0, 1.0, 1.0,],
+        [1.0, 1.0, 1.0, 1.0,],
+        [-1.0, 1.0, 1.0, 1.0,]];
+
+      colorCube();
+      pointsArray = m4.flatten(pointsArray);
+      normalsArray = m4.flatten(normalsArray);
+
+
+      var lightPosition = [2, 7.0, 0, 0.0];
+
+      var lightAmbient = [0.2, 0.2, 0.2, 1.0];
+      var lightDiffuse = [1.0, 1.0, 1.0, 1.0];
+      var lightSpecular = [1.0, 1.0, 1.0, 1.0];
+
+      var materialAmbient = [1.0, 0.0, 1.0, 1.0];
+      var materialDiffuse = [1.0, 0.8, 0.0, 1.0];
+      var materialSpecular = [1.0, 0.8, 0.0, 1.0];
+
+      var materialShininess = 10.0;
+
+
+
+      const S = 3; // size
+      const H = -0.15; // altezza
+      var vertices3 = [-S, H, -S, S, H, -S, S, H, S, -S, H, S,];
+      var colors3 = [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7];
+      var indices3 = [0, 1, 2, 0, 2, 3,];
+
+      //usa libreria webgl-utilis.js
+      var shaderprogram = webglUtils.createProgramFromScripts(gl,
+        ["vertex-shader", "fragment-shader"]);
+      gl.useProgram(shaderprogram);
+
+      // NORMALI
+      var nBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
+      //    gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(normalsArray), gl.STATIC_DRAW );
+      gl.bufferData(gl.ARRAY_BUFFER, normalsArray, gl.STATIC_DRAW);
+
+      var vNormal = gl.getAttribLocation(shaderprogram, "vNormal");
+      gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(vNormal);
+
+
+      // Create and store data into vertex buffer 
+      var vertex_buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, pointsArray, gl.STATIC_DRAW);
+
+      var _position = gl.getAttribLocation(shaderprogram, "vPosition");
+      gl.vertexAttribPointer(_position, 4, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(_position);
+
+/*       
+      // PIANO SU CUI GIACE L'AUTO
+      var vertex_buffer3 = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
+      gl.bufferData(gl.ARRAY_BUFFER,
+        new Float32Array(vertices3), gl.STATIC_DRAW);
+      // Create and store data into color buffer 
+      var color_buffer3 = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer3);
+      gl.bufferData(gl.ARRAY_BUFFER,
+        new Float32Array(colors3), gl.STATIC_DRAW);
+      // Create and store data into index buffer
+      var index_buffer3 = gl.createBuffer();
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer3);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices3), gl.STATIC_DRAW);
+ */
+
+      function degToRad(d) {
+        return d * Math.PI / 180;
+      }
+
+      //definizione parametri iniziali
+      var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+      var zmin = 1;
+      var zmax = 100;
+      var fov = 40;
+
+      var THETA = degToRad(50), PHI = degToRad(30);
+      var D = 7;
+
+      var target = [0, 0, 0];
+      var up = [0, 1, 0];
+
+      var drag;
+
+      //var mozzo_step=degToRad(15);
+      //var mozzo = 0;
+
+      /*================= Mouse events ======================*/
+      var mouseDown = function (e) {
+        drag = true;
+        old_x = e.pageX, old_y = e.pageY;
+        e.preventDefault();
+        return false;
+      };
+
+      var mouseUp = function (e) {
+        drag = false;
+      };
+
+      var mouseMove = function (e) {
+        if (!drag) return false;
+        dX = -(e.pageX - old_x) * 2 * Math.PI / canvas.width;
+        dY = -(e.pageY - old_y) * 2 * Math.PI / canvas.height;
+        //console.log('stampa',dX,dY);
+        THETA += dX;
+        PHI += dY;
+        old_x = e.pageX, old_y = e.pageY;
+        e.preventDefault();
+        render();
+      };
+
+      //da usarsi senza animazione
+      // document.getElementById("Button1").onclick = function(){D *= 1.1; render()};
+      // document.getElementById("Button2").onclick = function(){D *= 0.9; render()};
+      // document.getElementById("Button3").onclick = function(){zmin  *= 1.1; zmax *= 1.1; render()};
+      // document.getElementById("Button4").onclick = function(){zmin *= 0.9; zmax *= 0.9; render()};
+      // document.getElementById("Button5").onclick = function(){fov  *= 1.1; fov *= 1.1; render()};
+      // document.getElementById("Button6").onclick = function(){fov *= 0.9; fov *= 0.9; render()};
+
+      document.getElementById("Button1").onclick = function () { D *= 1.1 };
+      document.getElementById("Button2").onclick = function () { D *= 0.9 };
+      document.getElementById("Button3").onclick = function () { zmin *= 1.1; zmax *= 1.1 };
+      document.getElementById("Button4").onclick = function () { zmin *= 0.9; zmax *= 0.9 };
+      document.getElementById("Button5").onclick = function () { fov *= 1.1; fov *= 1.1 };
+      document.getElementById("Button6").onclick = function () { fov *= 0.9; fov *= 0.9 };
+
+      canvas.onmousedown = mouseDown;
+      canvas.onmouseup = mouseUp;
+      canvas.mouseout = mouseUp;
+      canvas.onmousemove = mouseMove;
+      window.addEventListener('keydown', doKeyDown, true);
+      window.addEventListener('keyup', doKeyUp, true);
+      /*=================== Drawing =================== */
+      function doKeyDown(e) {
+        //====================
+        // THE W KEY
+        //====================
+        if (e.keyCode == 87) key[0] = true;
+        //====================
+        // THE S KEY
+        //====================
+        if (e.keyCode == 83) key[2] = true;
+        //====================
+        // THE A KEY
+        //====================
+        if (e.keyCode == 65) key[1] = true;
+        //====================
+        // THE D KEY
+        //====================
+        if (e.keyCode == 68) key[3] = true;
+      }
+      function doKeyUp(e) {
+        //====================
+        // THE W KEY
+        //====================
+        if (e.keyCode == 87) key[0] = false;
+        //====================
+        // THE S KEY
+        //====================
+        if (e.keyCode == 83) key[2] = false;
+        //====================
+        // THE A KEY
+        //====================
+        if (e.keyCode == 65) key[1] = false;
+        //====================
+        // THE D KEY
+        //====================
+        if (e.keyCode == 68) key[3] = false;
+      }
+
+      var render = function () {
+        //set view matrix
+        var camera = [D * Math.sin(PHI) * Math.cos(THETA),
+        D * Math.sin(PHI) * Math.sin(THETA),
+        D * Math.cos(PHI)];
+        var view_matrix = m4.inverse(m4.lookAt(camera, target, up));
+        //set projection matrix
+        var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
+        proj_matrix = m4.multiply(proj_matrix, view_matrix);
+
+        var ambientProduct = m4.mvec4(lightAmbient, materialAmbient);
+        var diffuseProduct = m4.mvec4(lightDiffuse, materialDiffuse);
+        var specularProduct = m4.mvec4(lightSpecular, materialSpecular);
+        gl.uniform4fv(gl.getUniformLocation(shaderprogram, "ambientProduct"), ambientProduct);
+        gl.uniform4fv(gl.getUniformLocation(shaderprogram, "diffuseProduct"), diffuseProduct);
+        gl.uniform4fv(gl.getUniformLocation(shaderprogram, "specularProduct"), specularProduct);
+        gl.uniform4fv(gl.getUniformLocation(shaderprogram, "lightPosition"), lightPosition);
+        gl.uniform1f(gl.getUniformLocation(shaderprogram, "shininess"), materialShininess);
+
+        gl.uniformMatrix4fv(gl.getUniformLocation(shaderprogram, "projectionMatrix"),
+          false, proj_matrix);
+
+        gl.enable(gl.DEPTH_TEST);
+        // gl.depthFunc(gl.LEQUAL); 
+        gl.clearColor(1.0, 1.0, 1.0, 1);
+        /*to manage text on canvas and webgl */
+        // Clear the 2D canvas
+        //to manage text on canvas and webgl
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+        gl.clearDepth(1.0);
+        gl.viewport(0.0, 0.0, canvas.width, canvas.height);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+        /*         gl.uniformMatrix4fv(_Pmatrix, false, proj_matrix);
+                gl.uniformMatrix4fv(_Vmatrix, false, view_matrix); */
+        //set model matrix to I4
+        mo_matrix = m4.identity();
+        gl.uniformMatrix4fv(gl.getUniformLocation(shaderprogram, "modelViewMatrix"), false, mo_matrix);
+
+        CarRender();
+
+        //to manage text on canvas and webgl
+        ctx.font = '18pt Calibri';
+        ctx.fillStyle = 'green';
+        ctx.fillText('Welcome to CAR Project', 90, 50);
+
+        // window.requestAnimationFrame(render); 
+      }
+      // render();
+
+      //Per fare una prova di animazione senza andare a tempo, commentare quanto segue
+      //e scommentare le:
+      //window.requestAnimationFrame(render);
+      //
+      //render()
+      //
+      const FRAMES_PER_SECOND = 30;  // Valid values are 60,30,20,15,10...
+      // set the mim time to render the next frame
+      const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
+      var lastFrameTime = 0;  // the last frame time
+      function update(time) {
+        if (time - lastFrameTime < FRAME_MIN_TIME) { //skip the frame if the call is too early
+          CarDoStep();
+          window.requestAnimationFrame(update);
+          return; // return as there is nothing to do
+        }
+        lastFrameTime = time; // remember the time of the rendered frame
+        // render the frame
+        render();
+        window.requestAnimationFrame(update); // get next frame
+      }
+
+      CarInit();
+      update(); // start animation
+      window.requestAnimationFrame(update);
+
+    </script>
+</body>
+
+</html>
