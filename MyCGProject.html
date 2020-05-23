@@ -92,11 +92,12 @@
         <script type="text/javascript" src="resources/glm_light.js"></script>
         <script type="text/javascript" src="resources/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="resources/objects_manager.js"></script>
+        <script type="text/javascript" src="resources/primitives.js"></script>
         <script>
 
-            function drawObject(objects, object_name) {
+            function drawObjectFill(objects, object_name, r, g, b) {
                 var vertices = getVertices(objects, object_name);
-                var indices = getIndices(objects, object_name);
+                var indices = getTriangleIndices(objects, object_name);
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
@@ -104,32 +105,71 @@
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
+                /*========== TO TEST ===================*/
+                var colors = makeGivenVertexColors(vertices, r, g, b)
+                gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
+                gl.bufferData(gl.ARRAY_BUFFER,
+                    new Float32Array(colors), gl.STATIC_DRAW);
+                gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(_color);
+
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
                     new Uint16Array(indices), gl.STATIC_DRAW);
 
                 gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
             }
+
+            function drawObjectWire(objects, object_name) {
+                var vertices = getVertices(objects, object_name);
+                var edges = getEdges(objects, object_name);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+                gl.bufferData(gl.ARRAY_BUFFER,
+                    new Float32Array(vertices), gl.STATIC_DRAW);
+                gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(_position);
+
+                var colors = makeGivenVertexColors(vertices, 0, 0, 0)
+                gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
+                gl.bufferData(gl.ARRAY_BUFFER,
+                    new Float32Array(colors), gl.STATIC_DRAW);
+                gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(_color);
+
+
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, edge_buffer);
+                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
+                    new Uint16Array(edges), gl.STATIC_DRAW);
+
+                gl.drawElements(gl.LINES, edges.length, gl.UNSIGNED_SHORT, 0);
+            }
+
             var mo_matrix, mo_matrix1;
+
             /*============= Creating a canvas ======================*/
             var canvas = document.getElementById('my_Canvas');
-            gl = canvas.getContext('webgl');
+            var gl = canvas.getContext('webgl');
             //to manage text on canvas and webgl
             // look up the text canvas.
             var textCanvas = document.getElementById("text");
             // make a 2D context for it
             var ctx = textCanvas.getContext("2d");
 
-            /*============= Objects in scene =======================*/
-            var objects = new Array();
+            var objects;
 
-            objects = addObject('Ferrari', './resources/data/cube.obj', objects);
-
+            objects = new Array();
+            addObject('Ferrari_chassis', './resources/data/Ferrari_chassis.obj', objects);
+            addObject('Ferrari_wheel_back_R', './resources/data/Ferrari_wheel_back_R.obj', objects);
+            addObject('Ferrari_wheel_back_R_metal', './resources/data/Ferrari_wheel_back_R_metal.obj', objects);
+            addObject('Ferrari_wheel_front_R', './resources/data/Ferrari_wheel_front_R.obj', objects);
+            addObject('Ferrari_wheel_front_R_metal', './resources/data/Ferrari_wheel_front_R_metal.obj', objects);
             console.log(objects)
 
             var vertex_buffer = gl.createBuffer();
             var index_buffer = gl.createBuffer();
-
+            var color_buffer = gl.createBuffer();
+            var edge_buffer = gl.createBuffer();
 
             //usa libreria webgl-utilis.js
             var shaderprogram = webglUtils.createProgramFromScripts(gl,
@@ -195,7 +235,8 @@
             var up = [0, 1, 0];
 
             var drag;
-            var render = function () {
+            var render = async function () {
+
                 //set projection matrix
                 var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
                 //set view matrix
@@ -221,7 +262,20 @@
                 mo_matrix = m4.identity();
                 gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
-                drawObject(objects, 'Ferrari');
+                drawObjectFill(objects, 'Ferrari_chassis', 1, 0, 0);
+                drawObjectWire(objects, 'Ferrari_chassis');
+
+                drawObjectFill(objects, 'Ferrari_wheel_back_R', 0, 0, 0);
+                drawObjectWire(objects, 'Ferrari_wheel_back_R');
+
+                drawObjectFill(objects, 'Ferrari_wheel_back_R_metal', 0, 0, 0);
+                drawObjectWire(objects, 'Ferrari_wheel_back_R_metal');
+
+                drawObjectFill(objects, 'Ferrari_wheel_front_R', 0, 0, 0);
+                drawObjectWire(objects, 'Ferrari_wheel_front_R');
+
+                drawObjectFill(objects, 'Ferrari_wheel_front_R_metal', 0, 0, 0);
+                drawObjectWire(objects, 'Ferrari_wheel_front_R_metal');
 
                 ctx.font = '18pt Calibri';
                 ctx.fillStyle = 'green';
