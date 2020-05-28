@@ -10,9 +10,9 @@
  */
 function addObject(object_name, obj_path, objects) {
 
-    if (getMeshByName(objects, object_name) != null)
+    if (getObjectByName(objects, object_name) != null)
         return;
-    
+
     var jqXHR = $.ajax({
         async: false,
         url: obj_path,
@@ -27,13 +27,17 @@ function addObject(object_name, obj_path, objects) {
 
     // parse obj from glm_light library
     mesh = ReadOBJ(data, mesh);
-
+    
     // add edge
     mesh = LoadSubdivMesh(mesh);
 
+
     objects.push({
         name: object_name,
-        mesh: mesh
+        mesh: mesh,
+        vertices: getVertices(mesh),
+        indices: getTriangleIndices(mesh),
+        edges: getEdges(mesh)
     });
 
 }
@@ -43,28 +47,17 @@ function addObject(object_name, obj_path, objects) {
  * @param {*} objects 
  * @param {*} object_name 
  */
-function getTriangleIndices(objects, object_name) {
-    var mesh = getMeshByName(objects, object_name);
-
+function getTriangleIndices(mesh) {
     if (!mesh)
         return null;
 
     var indices = new Array();
 
-    for (let i = 0; i < mesh.nface; i++) {
-        if (verticesNumberOnFace(mesh.face[i]) == 3) {
+    for (let i = 0; i <= mesh.nface; i++) {
+        for (let k = 1; k < verticesNumberOnFace(mesh.face[i]) - 1; k++) {
             indices.push(mesh.face[i].vert[0]);
-            indices.push(mesh.face[i].vert[1]);
-            indices.push(mesh.face[i].vert[2]);
-        }
-        else if (verticesNumberOnFace(mesh.face[i]) == 4) {
-            indices.push(mesh.face[i].vert[0]);
-            indices.push(mesh.face[i].vert[1]);
-            indices.push(mesh.face[i].vert[2]);
-
-            indices.push(mesh.face[i].vert[2]);
-            indices.push(mesh.face[i].vert[3]);
-            indices.push(mesh.face[i].vert[0]);
+            indices.push(mesh.face[i].vert[k]);
+            indices.push(mesh.face[i].vert[k + 1]);
         }
     }
     return indices;
@@ -75,15 +68,14 @@ function getTriangleIndices(objects, object_name) {
  * @param {*} objects 
  * @param {*} object_name 
  */
-function getEdges(objects, object_name) {
-    var mesh = getMeshByName(objects, object_name);
+function getEdges(mesh) {
 
     if (!mesh)
         return null;
 
     var edges = new Array();
 
-    for (let i = 0; i < mesh.nedge; i++) {
+    for (let i = 0; i <= mesh.nedge; i++) {
         edges.push(mesh.edge[i].vert[0]);
         edges.push(mesh.edge[i].vert[1]);
     }
@@ -108,17 +100,15 @@ function verticesNumberOnFace(face) {
  * @param {*} objects 
  * @param {*} object_name 
  */
-function getVertices(objects, object_name) {
-    var mesh = getMeshByName(objects, object_name);
-
+function getVertices(mesh) {
     if (!mesh)
         return null;
 
     var vertices = new Array();
-    for (let i = 0; i < mesh.nvert; i++) {
-        vertices.push(mesh.vert[i].x);
-        vertices.push(mesh.vert[i].y);
-        vertices.push(mesh.vert[i].z);
+    for (let i = 0; i <= mesh.nvert; i++) {
+            vertices.push(mesh.vert[i].x);
+            vertices.push(mesh.vert[i].y);
+            vertices.push(mesh.vert[i].z);
     }
 
     return vertices;
@@ -129,10 +119,10 @@ function getVertices(objects, object_name) {
  * @param {*} objects 
  * @param {*} object_name 
  */
-function getMeshByName(objects, object_name) {
+function getObjectByName(objects, object_name) {
     for (let i = 0; i < objects.length; i++)
-        if (object_name===objects[i].name)
-            return objects[i].mesh;
+        if (object_name === objects[i].name)
+            return objects[i];
     return null;
 }
 
