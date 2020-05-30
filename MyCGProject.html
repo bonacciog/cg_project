@@ -158,15 +158,13 @@
 
             objects = new Array();
             addObject('chassis', './resources/data/chassis.obj', objects);
-            addObject('posteriore_sinistra', './resources/data/posteriore_sinistra.obj', objects);
-            addObject('posteriore_destra', './resources/data/posteriore_destra.obj', objects);
-            addObject('anteriore_sinistra', './resources/data/anteriore_sinistra.obj', objects);
-            addObject('anteriore_destra', './resources/data/anteriore_destra.obj', objects);
+            addObject('ruota_posteriore', './resources/data/posteriore.obj', objects);
+            addObject('ruota_anteriore', './resources/data/anteriore.obj', objects);
             console.log(objects)
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
             const S = 3; // size
-            const H = -0.20; // altezza
+            const H = -0.22; // altezza
             var vertices3 = [-S, H, -S, S, H, -S, S, H, S, -S, H, S,];
             var colors3 = [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7];
             var indices3 = [0, 1, 2, 0, 2, 3,];
@@ -243,6 +241,7 @@
                 PHI += dY;
                 old_x = e.pageX, old_y = e.pageY;
                 e.preventDefault();
+                console.log(THETA, PHI);
                 render();
             };
 
@@ -303,7 +302,7 @@
             var zmax = 140;
             var fov = 40;
 
-            var THETA = degToRad(50), PHI = degToRad(30);
+            var THETA = degToRad(12.5), PHI = degToRad(-1.6);
             var D = 15;
 
             var target = [0, 0, 0];

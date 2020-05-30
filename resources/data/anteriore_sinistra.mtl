@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
 # Material Count: 2
 
-newmtl tire.002
+newmtl tire.001
 Ns 96.078443
 Ka 1.000000 1.000000 1.000000
 Kd 0.061264 0.061264 0.061264
@@ -11,7 +11,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl wheelhub.002
+newmtl wheelhub.001
 Ns 96.078443
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
