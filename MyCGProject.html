@@ -320,36 +320,33 @@
             var zmax = 140;
             var fov = 40;
 
-            var THETA = degToRad(90), PHI = degToRad(90); // per ottenere 0,4,0
-            var D = 4;
+            var THETA = degToRad(82), PHI = degToRad(90); // per ottenere 0,4,0 90 90 4
+            var D = 0.71; //
 
-            var target = [0, 0, 0];
+            var target = [0, 0, -4];
             var up = [0, 1, 0];
 
             var drag;
 
-            var camera = [/* D * Math.sin(PHI) * Math.cos(THETA),
+            var camera = [D * Math.sin(PHI) * Math.cos(THETA),
                 D * Math.sin(PHI) * Math.sin(THETA),
-                D * Math.cos(PHI) */ 0,4,0];
-           
-            var cameraMatrix_start = m4.lookAt(camera, target, up);
-            var view_matrix_start = m4.inverse(cameraMatrix_start);
+                D * Math.cos(PHI)/* 0.1,0.7,0 */];
+            var dst = m4.subtractVectors(target, camera, dst)
+            var cameraMatrix = m4.lookAt(camera, target, up);
             var render = async function () {
 
                 //set projection matrix
                 var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
                 //set view matrix
+                //target=[0,1,-4]
+                target = [px, 0, pz-4];
                 
-                target = [px, py, pz-4];
-                
-
-                var cameraMatrix = m4.inverse(view_matrix_start);
-                cameraMatrix = m4.translate(cameraMatrix, 0,0,pz);
-                //console.log(cameraMatrix[14])
-                //camera[0] = [cameraMatrix[12]];
-                
-                camera[2] = cameraMatrix[14]; 
+                var camera = m4.subtractVectors(target, dst, camera)
                 cameraMatrix = m4.lookAt(camera, target, up);
+
+                cameraMatrix = m4.yRotate(cameraMatrix, degToRad(facing)) 
+                               
+                cameraMatrix = m4.translate(cameraMatrix, 0,0,11)
                 
                 
 
