@@ -95,7 +95,7 @@ function CarInit() {
   key = [false, false, false, false];
 
   //velSterzo = 3.4;         // A
-    velSterzo=2.26;       // A
+    velSterzo=2.0;       // A
   velRitornoSterzo = 0.93; // B, sterzo massimo = A*B / (1-B)
 
   //accMax = 0.0011;
@@ -132,7 +132,7 @@ function CarRender() {
 
   //  drawAxis(); // disegno assi spazio mondo
   //  glPushMatrix();
-
+  
   mo_matrix = m4.translate(mo_matrix, px, py, pz);
   mo_matrix = m4.yRotate(mo_matrix, degToRad(facing));
 
@@ -183,7 +183,7 @@ function CarRender() {
   // ruota anteriore D
   mo_matrix1 = m4.copy(mo_matrix);
   // setta la posizione giusta rispetto alla carlinga
-  mo_matrix1 = m4.translate(mo_matrix1, 0.8, -0.25, -1.5)
+  mo_matrix1 = m4.translate(mo_matrix1, 0.65, -0.25, -1.5)
   mo_matrix1 = m4.zRotate(mo_matrix1, degToRad(180));
 
   mo_matrix1 = m4.translate(mo_matrix1, -0.58, +raggio - 0.28, -0.55);
