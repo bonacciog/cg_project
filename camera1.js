@@ -13,7 +13,7 @@ function setDefaultCamera(){
 
     cameraMatrix = m4.yRotate(cameraMatrix, degToRad(facing));
 
-    cameraMatrix = m4.translate(cameraMatrix, 0,3,16);
+    cameraMatrix = m4.translate(cameraMatrix, 0,5,18.5);
 }
 
 function setHighAndStaticCamera(){

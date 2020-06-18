@@ -88,7 +88,7 @@
         <script type="text/javascript" src="resources/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="resources/objects_manager.js"></script>
         <script type="text/javascript" src="car.js"></script>
-        <script type="text/javascript" src="camera.js"></script>
+        <script type="text/javascript" src="camera1.js"></script>
         <script>
 
             function drawObjectFill(objects, object_name, r, g, b) {
@@ -156,6 +156,8 @@
             addObject('chassis', './resources/data/chassis.obj', objects);
             addObject('ruota_posteriore', './resources/data/posteriore.obj', objects);
             addObject('ruota_anteriore', './resources/data/anteriore.obj', objects);
+            addObject('barriera', './resources/data/Barrier.obj', objects);
+            addObject('parcheggio', './resources/data/ParkingLot.obj', objects);
             console.log(objects)
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
@@ -217,10 +219,7 @@
                 return d * Math.PI / 180;
             }
             
-            /* function norm(v){
-                return Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-            } */
-
+           
             /*================= Mouse events ======================*/
             var mouseDown = function (e) {
                 drag = true;
@@ -356,18 +355,34 @@
                 gl.uniformMatrix4fv(_Pmatrix, false, proj_matrix);
                 gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
                 //set model matrix to I4
+                
                 mo_matrix = m4.identity();
+                
                 gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
-                mo_matrix = m4.scale(mo_matrix, 2, 20, 5);
+                /* mo_matrix = m4.scale(mo_matrix, 2, 20, 5);
                 gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-                drawFloor();
+                drawFloor(); */
+                var park_matrix = m4.identity(); 
+                park_matrix = m4.translate(park_matrix, 2,-3,-15);
+                park_matrix = m4.scale(park_matrix, 15, 15, 15); 
+                gl.uniformMatrix4fv(_Mmatrix, false, park_matrix);
+                drawObjectFill(objects, 'parcheggio', 0.7, 0.7, 0.7);
+                drawObjectWire(objects, 'parcheggio')
 
                 mo_matrix = m4.identity();
+
+                
 
                 gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
                 CarRender();
 
+                var bar_matrix = m4.identity();
+                bar_matrix = m4.translate(bar_matrix, -2,-2,-15);
+                bar_matrix = m4.scale(bar_matrix, 0.2, 0.2, 0.2);
+                gl.uniformMatrix4fv(_Mmatrix, false, bar_matrix);
+                drawObjectFill(objects, 'barriera', 0, 0, 0);
+                drawObjectWire(objects, 'barriera')
 
                 ctx.font = '18pt Calibri';
                 ctx.fillStyle = 'green';
