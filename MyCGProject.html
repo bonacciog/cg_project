@@ -49,16 +49,7 @@
 
 <body>
     <p> </p>
-    <button id="Button1">Increase D</button>
-    <button id="Button2">Decrease D</button>
-    <button id="Button3">Increase Zm</button>
-    <button id="Button4">Decrease Zm</button>
-    <button id="Button5">Increase fov</button>
-    <button id="Button6">Decrease fov</button>
-    <button id="Button7">Increase THETA</button>
-    <button id="Button8">Decrease THETA</button>
-    <button id="Button9">Increase PHI</button>
-    <button id="Button10">Decrease PHI</button>
+    <button id="camera">Change camera</button>
     <p> </p>
 
     <div class="container">
@@ -226,6 +217,9 @@
                 return d * Math.PI / 180;
             }
             
+            /* function norm(v){
+                return Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+            } */
 
             /*================= Mouse events ======================*/
             var mouseDown = function (e) {
@@ -250,16 +244,15 @@
                 render();
             };
 
-            document.getElementById("Button1").onclick = function () { D *= 1.1; console.log("D=", D) };
-            document.getElementById("Button2").onclick = function () { D *= 0.9; console.log("D=", D) };
-            document.getElementById("Button3").onclick = function () { zmin *= 1.1; zmax *= 1.1; console.log("Z=", zmin, zmax) };
-            document.getElementById("Button4").onclick = function () { zmin *= 0.9; zmax *= 0.9; console.log("Z=", zmin, zmax) };
-            document.getElementById("Button5").onclick = function () { fov *= 1.1; fov *= 1.1; console.log("fov=", fov) };
-            document.getElementById("Button6").onclick = function () { fov *= 0.9; fov *= 0.9; console.log("fov=", fov) };
-            document.getElementById("Button7").onclick = function () { THETA *= 1.1; THETA *= 1.1; console.log("THETA=", THETA) };
-            document.getElementById("Button8").onclick = function () { THETA *= 0.9; THETA *= 0.9; console.log("THETA=", fov) };
-            document.getElementById("Button9").onclick = function () { PHI *= 1.1; PHI *= 1.1; console.log("PHI=", fov) };
-            document.getElementById("Button10").onclick = function () { PHI *= 0.9; PHI *= 0.9; console.log("PHI=", fov) };
+            document.getElementById("camera").onclick = function () { 
+                var cameras = Object.keys(setCamera);
+                var camera_index = cameras.indexOf(camera_type);
+                if(camera_index == cameras.length-1)
+                    camera_type = cameras[0];
+                else
+                    camera_type = cameras[camera_index+1];             
+                
+            };
 
             canvas.onmousedown = mouseDown;
             canvas.onmouseup = mouseUp;
@@ -320,8 +313,8 @@
             var zmax = 140;
             var fov = 40;
 
-            var THETA = degToRad(82), PHI = degToRad(90); // per ottenere 0,4,0 90 90 4
-            var D = 0.71; //
+            var THETA = degToRad(0), PHI = degToRad(90); // per ottenere 0,4,0 90 90 4
+            var D = 0.125; //
 
             var target = [0, 0, -4];
             var up = [0, 1, 0];
@@ -330,25 +323,22 @@
 
             var camera = [D * Math.sin(PHI) * Math.cos(THETA),
                 D * Math.sin(PHI) * Math.sin(THETA),
-                D * Math.cos(PHI)/* 0.1,0.7,0 */];
+                D * Math.cos(PHI)];
+
             var dst = m4.subtractVectors(target, camera, dst)
+
             var cameraMatrix = m4.lookAt(camera, target, up);
+            
+            var camera_type = 'highstatic'
+
             var render = async function () {
 
                 //set projection matrix
                 var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
                 //set view matrix
-                //target=[0,1,-4]
-                target = [px, 0, pz-4];
-                
-                var camera = m4.subtractVectors(target, dst, camera)
-                cameraMatrix = m4.lookAt(camera, target, up);
-
-                cameraMatrix = m4.yRotate(cameraMatrix, degToRad(facing)) 
-                               
-                cameraMatrix = m4.translate(cameraMatrix, 0,0,11)
-                
-                
+                setCamera[camera_type]();
+                             
+                    
 
                 var view_matrix = m4.inverse(cameraMatrix);
 
