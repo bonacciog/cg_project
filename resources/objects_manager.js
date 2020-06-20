@@ -27,7 +27,7 @@ function addObject(object_name, obj_path, objects) {
 
     // parse obj from glm_light library
     mesh = ReadOBJ(data, mesh);
-    
+
     // add edge
     mesh = LoadSubdivMesh(mesh);
 
@@ -106,9 +106,9 @@ function getVertices(mesh) {
 
     var vertices = new Array();
     for (let i = 0; i <= mesh.nvert; i++) {
-            vertices.push(mesh.vert[i].x);
-            vertices.push(mesh.vert[i].y);
-            vertices.push(mesh.vert[i].z);
+        vertices.push(mesh.vert[i].x);
+        vertices.push(mesh.vert[i].y);
+        vertices.push(mesh.vert[i].z);
     }
 
     return vertices;
@@ -158,3 +158,27 @@ function makeGivenVertexColors(vertices, r, g, b) {
     }
     return colors;
 }
+
+/* /**
+ * 
+ * @param {*} objects 
+ * @param {*} object_name 
+ */
+function getExtremeVertices(objects, object_name) {
+    let mesh;
+    var extremeVertices = {
+        ant_sx:[0,0],
+        ant_dx:[0,0],
+        pos_sx:[0,0],
+        pos_dx:[0,0]
+    };  
+    for (let i = 0; i < objects.length; i++)
+        if (objects[i].name === object_name)
+            mesh = objects[i].mesh;
+
+    for (let i = 0; i <= mesh.nvert; i++) {
+        let cur_x = mesh.vert[i].x;
+        let cur_z = mesh.vert[i].z;
+
+    }
+} */

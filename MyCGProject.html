@@ -48,9 +48,18 @@
 </head>
 
 <body>
-    <p> </p>
-    <button id="camera">Change camera</button>
-    <p> </p>
+    <p>
+        <button id="camera">Change camera</button>
+        <button id="reset">Reset game</button>
+    </p>
+    <p>
+        <button id="Button1">Increase D</button>
+        <button id="Button2">Decrease D</button>
+        <button id="Button3">Increase Zm</button>
+        <button id="Button4">Decrease Zm</button>
+        <button id="Button5">Increase fov</button>
+        <button id="Button6">Decrease fov</button>
+    </p>
 
     <div class="container">
         <canvas width="600" height="600" id="my_Canvas"></canvas>
@@ -87,8 +96,9 @@
         <script type="text/javascript" src="resources/glm_light.js"></script>
         <script type="text/javascript" src="resources/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="resources/objects_manager.js"></script>
-        <script type="text/javascript" src="car.js"></script>
-        <script type="text/javascript" src="camera1.js"></script>
+        <script type="text/javascript" src="car1.js"></script>
+        <script type="text/javascript" src="camera.js"></script>
+        <script type="text/javascript" src="environment.js"></script>
         <script>
 
             function drawObjectFill(objects, object_name, r, g, b) {
@@ -156,15 +166,17 @@
             addObject('chassis', './resources/data/chassis.obj', objects);
             addObject('ruota_posteriore', './resources/data/posteriore.obj', objects);
             addObject('ruota_anteriore', './resources/data/anteriore.obj', objects);
-            addObject('barriera', './resources/data/Barrier.obj', objects);
+            //addObject('barriera', './resources/data/Barrier.obj', objects);
             addObject('parcheggio', './resources/data/ParkingLot.obj', objects);
+            addObject('rettilineo', './resources/data/rettilineo.obj', objects);
+            addObject('curva', './resources/data/curva.obj', objects);
             console.log(objects)
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
-            const S = 20; // size
-            const H = -0.06; // altezza
+            const S = 1000; // size
+            const H = -2; // altezza
             var vertices3 = [-S, H, -S, S, H, -S, S, H, S, -S, H, S,];
-            var colors3 = [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7];
+            var colors3 = [0, 0.7, 0, 0, 0.7, 0, 0, 0.7, 0, 0, 0.7, 0];
             var indices3 = [0, 1, 2, 0, 2, 3,];
 
             var vertex_buffer3 = gl.createBuffer();
@@ -218,8 +230,8 @@
             function degToRad(d) {
                 return d * Math.PI / 180;
             }
-            
-           
+
+
             /*================= Mouse events ======================*/
             var mouseDown = function (e) {
                 drag = true;
@@ -243,15 +255,27 @@
                 render();
             };
 
-            document.getElementById("camera").onclick = function () { 
+            document.getElementById("camera").onclick = function () {
                 var cameras = Object.keys(setCamera);
                 var camera_index = cameras.indexOf(camera_type);
-                if(camera_index == cameras.length-1)
+                if (camera_index == cameras.length - 1)
                     camera_type = cameras[0];
                 else
-                    camera_type = cameras[camera_index+1];             
-                
+                    camera_type = cameras[camera_index + 1];
+
             };
+
+            document.getElementById("reset").onclick = function () {
+                ResetScene();
+                window.addEventListener('keydown', doKeyDown, true);
+                window.addEventListener('keyup', doKeyUp, true);
+            };
+            document.getElementById("Button1").onclick = function () { D *= 1.1 };
+            document.getElementById("Button2").onclick = function () { D *= 0.9 };
+            document.getElementById("Button3").onclick = function () { zmin *= 1.1; zmax *= 1.1 };
+            document.getElementById("Button4").onclick = function () { zmin *= 0.9; zmax *= 0.9 };
+            document.getElementById("Button5").onclick = function () { fov *= 1.1; fov *= 1.1 };
+            document.getElementById("Button6").onclick = function () { fov *= 0.9; fov *= 0.9 };
 
             canvas.onmousedown = mouseDown;
             canvas.onmouseup = mouseUp;
@@ -307,88 +331,95 @@
             }
 
             //definizione parametri iniziali
-            var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-            var zmin = 1;
-            var zmax = 140;
-            var fov = 40;
+            var aspect,zmin,zmax,fov;
 
-            var THETA = degToRad(0), PHI = degToRad(90); // per ottenere 0,4,0 90 90 4
-            var D = 0.125; //
-
-            var target = [0, 0, -4];
+            var THETA, PHI, D;
+            var target;
             var up = [0, 1, 0];
 
             var drag;
+            var camera, dst, cameraMatrix, camera_type;
+            var end;
 
-            var camera = [D * Math.sin(PHI) * Math.cos(THETA),
+            var ResetScene = function () {
+
+                aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+                zmin = 1;
+                zmax = 140;
+                fov = 40;
+
+                THETA = degToRad(0), PHI = degToRad(90); // per ottenere 0,4,0 90 90 4
+                D = 0.125; //
+
+                target = [0, 0, -4];
+
+                end = false;
+
+
+                camera = [D * Math.sin(PHI) * Math.cos(THETA),
                 D * Math.sin(PHI) * Math.sin(THETA),
                 D * Math.cos(PHI)];
 
-            var dst = m4.subtractVectors(target, camera, dst)
+                dst = m4.subtractVectors(target, camera, dst)
 
-            var cameraMatrix = m4.lookAt(camera, target, up);
-            
-            var camera_type = 'highstatic'
+                cameraMatrix = m4.lookAt(camera, target, up);
+
+                camera_type = 'default';
+
+                CarInit();
+                initBounds();
+            }
 
             var render = async function () {
+               // console.log(px,pz)
+                if (checkEnvironmentLimit(px, pz) && !end) {
+                    updateCheckpoint(px,pz);
+                    //set projection matrix
+                    var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
+                    //set view matrix
+                    setCamera[camera_type]();
+                    var view_matrix = m4.inverse(cameraMatrix);
 
-                //set projection matrix
-                var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
-                //set view matrix
-                setCamera[camera_type]();
-                             
-                    
+                    gl.enable(gl.DEPTH_TEST);
+                    // gl.depthFunc(gl.LEQUAL); 
+                    gl.clearColor(1.0, 1.0, 1.0, 1);
+                    /*to manage text on canvas and webgl */
+                    // Clear the 2D canvas
+                    //to manage text on canvas and webgl
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-                var view_matrix = m4.inverse(cameraMatrix);
+                    gl.clearDepth(1.0);
+                    gl.viewport(0.0, 0.0, canvas.width, canvas.height);
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+                    gl.uniformMatrix4fv(_Pmatrix, false, proj_matrix);
+                    gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
+                    //set model matrix to I4
 
-                gl.enable(gl.DEPTH_TEST);
-                // gl.depthFunc(gl.LEQUAL); 
-                gl.clearColor(1.0, 1.0, 1.0, 1);
-                /*to manage text on canvas and webgl */
-                // Clear the 2D canvas
-                //to manage text on canvas and webgl
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                    mo_matrix = m4.identity();
 
-                gl.clearDepth(1.0);
-                gl.viewport(0.0, 0.0, canvas.width, canvas.height);
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                gl.uniformMatrix4fv(_Pmatrix, false, proj_matrix);
-                gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
-                //set model matrix to I4
-                
-                mo_matrix = m4.identity();
-                
-                gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-
-                /* mo_matrix = m4.scale(mo_matrix, 2, 20, 5);
-                gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-                drawFloor(); */
-                var park_matrix = m4.identity(); 
-                park_matrix = m4.translate(park_matrix, 2,-3,-15);
-                park_matrix = m4.scale(park_matrix, 15, 15, 15); 
-                gl.uniformMatrix4fv(_Mmatrix, false, park_matrix);
-                drawObjectFill(objects, 'parcheggio', 0.7, 0.7, 0.7);
-                drawObjectWire(objects, 'parcheggio')
-
-                mo_matrix = m4.identity();
-
-                
-
-                gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-                CarRender();
-
-                var bar_matrix = m4.identity();
-                bar_matrix = m4.translate(bar_matrix, -2,-2,-15);
-                bar_matrix = m4.scale(bar_matrix, 0.2, 0.2, 0.2);
-                gl.uniformMatrix4fv(_Mmatrix, false, bar_matrix);
-                drawObjectFill(objects, 'barriera', 0, 0, 0);
-                drawObjectWire(objects, 'barriera')
-
-                ctx.font = '18pt Calibri';
-                ctx.fillStyle = 'green';
-                ctx.fillText('Welcome to CAR Project', 90, 50);
+                    gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
 
+                    drawFloor();
+
+                    mo_matrix = m4.identity();
+
+
+
+                    gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
+                    CarRender();
+
+                    RoadRender();
+
+                }
+                else {
+                    end = true;
+                    window.removeEventListener('keydown', doKeyDown, true);
+                    window.removeEventListener('keyup', doKeyUp, true);
+                    ctx.font = '40pt Calibri';
+                    ctx.fillStyle = 'red';
+                    ctx.fillText('GAME OVER', 90, 100);
+                }
             }
             const FRAMES_PER_SECOND = 30;  // Valid values are 60,30,20,15,10...
             // set the mim time to render the next frame
@@ -405,7 +436,7 @@
                 render();
                 window.requestAnimationFrame(update); // get next frame
             }
-            CarInit();
+            ResetScene();
             update(); // start animation
             window.requestAnimationFrame(update);  
         </script>

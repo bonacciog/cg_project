@@ -12,7 +12,6 @@ var velSterzo, velRitornoSterzo, accMax, attrito,
   grip, raggio,
   attritoX, attritoY, attritoZ; // attriti
 var key;
-
 // da invocare quando e' stato premuto/rilasciato il tasto numero "keycode"
 /* function EatKey(keycode, keymap, pressed_or_released)
 {
@@ -57,9 +56,9 @@ function CarDoStep() {
   facing = facing - (vzm * grip) * sterzo;
 
   // rotazione mozzo ruote (a seconda della velocita' sulla z)
-  var da ; //delta angolo
-  da=(180.0*vzm)/(Math.PI*raggio);
-  mozzo+=da;
+  var da; //delta angolo
+  da = (180.0 * vzm) / (Math.PI * raggio);
+  mozzo += da;
 
   // ritorno a vel coord mondo
   vx = +cosf * vxm + sinf * vzm;
@@ -95,11 +94,11 @@ function CarInit() {
   key = [false, false, false, false];
 
   //velSterzo = 3.4;         // A
-    velSterzo=2.0;       // A
+  velSterzo = 1;       // A
   velRitornoSterzo = 0.93; // B, sterzo massimo = A*B / (1-B)
 
   //accMax = 0.0011;
-  accMax = 0.0022;
+  accMax = 0.0035;
 
   // attriti: percentuale di velocita' che viene mantenuta
   // 1 = no attrito
@@ -127,19 +126,22 @@ function CarInit() {
 } */
 
 // disegna Car
-function CarRender() {
+function CarRender(allowed_movement) {
   // sono nello spazio mondo
 
   //  drawAxis(); // disegno assi spazio mondo
   //  glPushMatrix();
-  
+
+
   mo_matrix = m4.translate(mo_matrix, px, py, pz);
   mo_matrix = m4.yRotate(mo_matrix, degToRad(facing));
+
+
 
   // sono nello spazio MACCHINA
   //drawAxis(); // disegno assi spazio macchina
   gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-  drawObjectFill(objects, 'chassis', 0, 1, 0);
+  drawObjectFill(objects, 'chassis', 0, 1, 0.6);
   drawObjectWire(objects, 'chassis');
 
   // ruota posteriore S
