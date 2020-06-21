@@ -170,6 +170,7 @@
             addObject('parcheggio', './resources/data/ParkingLot.obj', objects);
             addObject('rettilineo', './resources/data/rettilineo.obj', objects);
             addObject('curva', './resources/data/curva.obj', objects);
+            addObject('cono', './resources/data/cono.obj', objects);
             console.log(objects)
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
@@ -284,7 +285,7 @@
             window.addEventListener('keydown', doKeyDown, true);
             window.addEventListener('keyup', doKeyUp, true);
             /*=================== Drawing =================== */
-            var prova = false;
+           
             function doKeyDown(e) {
                 //====================
                 // THE W KEY
@@ -394,11 +395,12 @@
 
                 initDebugCamera();
                 CarInit();
+                
                 initBounds();
             }
 
             var render = async function () {
-                console.log(px,pz)
+                //console.log(px,pz)
                 if (checkEnvironmentLimit(px, pz) && !end) {
                     updateCheckpoint(px,pz);
                     //set projection matrix
@@ -440,6 +442,7 @@
 
                 }
                 else {
+                    console.log(px,pz);
                     end = true;
                     window.removeEventListener('keydown', doKeyDown, true);
                     window.removeEventListener('keyup', doKeyUp, true);

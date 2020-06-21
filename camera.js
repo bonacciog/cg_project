@@ -4,7 +4,7 @@ var keyCamera;
 function initDebugCamera(){
     cx=cz=0;
     keyCamera = [false,false,false,false];
-    D=60; PHI=degToRad(90); THETA=degToRad(90);
+    D=80; PHI=degToRad(90); THETA=degToRad(90);
 }
 
 var setCamera = {
@@ -49,11 +49,11 @@ function setCameraOnTheCar() {
 }
 
 function setDebugCamera() {
-    if (keyCamera[1]) cx -= 1.5;
-    if (keyCamera[3]) cx += 1.5;
+    if (keyCamera[1]) cx -= 2;
+    if (keyCamera[3]) cx += 2;
   
-    if (keyCamera[0]) cz += 1.5; 
-    if (keyCamera[2]) cz -= 1.5; 
+    if (keyCamera[0]) cz += 2; 
+    if (keyCamera[2]) cz -= 2; 
     
     camera = [D * Math.sin(PHI) * Math.cos(THETA),
     D * Math.sin(PHI) * Math.sin(THETA),

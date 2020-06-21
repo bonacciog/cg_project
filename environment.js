@@ -24,6 +24,18 @@ function initBounds() {
     checkpoint_bounds.push(
         check_Curve_2
     );
+    checkpoint_bounds.push(
+        check_StraightRoad_3
+    );
+    checkpoint_bounds.push(
+        check_Curve_3
+    );
+    checkpoint_bounds.push(
+        check_Curve_4
+    );
+    checkpoint_bounds.push(
+        check_StraightRoad_4
+    );
     checkpoint = 0;
 }
 
@@ -32,12 +44,14 @@ function updateCheckpoint(px, pz) {
      || checkpoint === 1 && px<=-20
      || checkpoint === 2 && px<=-87 
      || checkpoint === 3 && pz<=-190
-     || checkpoint === 4 && pz<=-223){
+     || checkpoint === 4 && pz<=-223
+     || checkpoint === 5 && px>=-98
+     || checkpoint === 6 && px>=-83
+     || checkpoint === 7 && pz<=-266
+     || checkpoint === 8 && px<=-84){
         checkpoint++;
+        console.log(checkpoint);   
      }
-       
-        
-    
 }
 
 function checkEnvironmentLimit(px, pz) {
@@ -62,7 +76,7 @@ function checkEnvironmentLimit(px, pz) {
     // traslo nel punto
     let pos_bag = [origin_bag_rot[1] + px, origin_bag_rot[0] + pz];
 
-    return checkpoint_bounds[checkpoint](pos_cofano, pos_bag);
+    return checkpoint_bounds[checkpoint](pos_cofano, pos_bag) && checkobjects(pos_cofano, pos_bag);
     
 }
 
@@ -123,6 +137,47 @@ function RoadRender() {
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
     drawObjectFill(objects, 'curva', 0.7, 0.7, 0.7);
     drawObjectWire(objects, 'curva');
+
+    road_matrix = m4.copy(road_matrix);
+    road_matrix = m4.translate(road_matrix, -685, 0, 305);
+    road_matrix = m4.yRotate(road_matrix, degToRad(180))
+    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    drawObjectFill(objects, 'curva', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'curva');
+
+    road_matrix = m4.copy(road_matrix);
+    road_matrix = m4.translate(road_matrix, -27, 0, -660);
+    road_matrix = m4.yRotate(road_matrix, degToRad(90))
+    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    drawObjectFill(objects, 'curva', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'curva');
+
+    road_matrix = m4.copy(road_matrix);
+    road_matrix = m4.translate(road_matrix, 110, 99.5, -680);
+    road_matrix = m4.yRotate(road_matrix, degToRad(90))
+    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'rettilineo');
+
+    road_matrix = m4.copy(road_matrix);
+    road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
+    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'rettilineo');
+
+    var cono_matrix = m4.identity();
+    cono_matrix = m4.translate(cono_matrix,-130, 0, -295);
+    gl.uniformMatrix4fv(_Mmatrix, false, cono_matrix);
+    drawObjectFill(objects, 'cono', 0, 0, 0);
+    drawObjectWire(objects, 'cono');
+}
+
+function checkobjects(pos_cofano, pos_bag){
+    let current_origin = [-130,-295];
+    let raggio =1;
+
+    return distance(pos_cofano, current_origin) >= raggio 
+            && distance(pos_bag, current_origin) >= raggio;
 }
 
 function check_StraightRoad_0(pos_cofano, pos_bag){
@@ -147,7 +202,7 @@ function check_Curve_0(pos_cofano, pos_bag){
 
 function check_StraightRoad_1(pos_cofano, pos_bag){
     let x_bound = [-Infinity,8];
-    let z_bound = [-155,-177]
+    let z_bound = [-155,-177.5]
     
     return pos_cofano[0] >= x_bound[0] && pos_cofano[0] <= x_bound[1]
             && pos_cofano[1] <= z_bound[0] && pos_cofano[1] >= z_bound[1]
@@ -186,6 +241,52 @@ function check_Curve_2(pos_cofano, pos_bag){
     && distance(pos_cofano, current_origin) >= raggio[0] 
     && distance(pos_bag, current_origin) >= raggio[0];
       
+}
+function check_StraightRoad_3(pos_cofano, pos_bag){
+    let x_bound = [-Infinity,Infinity];
+    let z_bound = [-242,-255.5]
+    
+    return pos_cofano[0] >= x_bound[0] && pos_cofano[0] <= x_bound[1]
+            && pos_cofano[1]<= z_bound[0] && pos_cofano[1] >= z_bound[1]
+            && pos_bag[0] >= x_bound[0] && pos_bag[0] <= x_bound[1]
+            && pos_bag[1] <= z_bound[0] && pos_bag[1] >= z_bound[1] 
+    
+}
+
+
+function check_Curve_3(pos_cofano, pos_bag){
+    let current_origin = [-87,-270];
+    let raggio = [17,34];
+
+    return distance(pos_cofano, current_origin) <= raggio[1] 
+    && distance(pos_bag, current_origin) <= raggio[1]
+    && distance(pos_cofano, current_origin) >= raggio[0] 
+    && distance(pos_bag, current_origin) >= raggio[0];
+      
+}
+    
+
+
+function check_Curve_4(pos_cofano, pos_bag){
+    let current_origin = [-89,-272.5];
+    let raggio = [19,35];
+
+    return distance(pos_cofano, current_origin) <= raggio[1] 
+    && distance(pos_bag, current_origin) <= raggio[1]
+    && distance(pos_cofano, current_origin) >= raggio[0] 
+    && distance(pos_bag, current_origin) >= raggio[0];
+      
+}
+
+function check_StraightRoad_4(pos_cofano, pos_bag){
+    let x_bound = [-Infinity,Infinity];
+    let z_bound = [-289,-302]
+
+    return  pos_cofano[0] >= x_bound[0] && pos_cofano[0] <= x_bound[1]
+            && pos_cofano[1]<= z_bound[0] && pos_cofano[1] >= z_bound[1]
+            && pos_bag[0] >= x_bound[0] && pos_bag[0] <= x_bound[1]
+            && pos_bag[1] <= z_bound[0] && pos_bag[1] >= z_bound[1] ; 
+    
 }
 
 function distance(p1,p2){
