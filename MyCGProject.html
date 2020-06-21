@@ -302,10 +302,23 @@
                 // THE D KEY
                 //====================
                 if (e.keyCode == 68) key[3] = true;
+
                 //====================
-                // THE SPACEBAR KEY
+                // THE UP KEY
                 //====================
-                if (e.keyCode == 32) prova = true;
+                if (e.keyCode == 101) keyCamera[0] = true;
+                //====================
+                // THE DOWN KEY
+                //====================
+                if (e.keyCode == 98) keyCamera[2] = true;
+                //====================
+                // THE LEFT KEY
+                //====================
+                if (e.keyCode == 97) keyCamera[1] = true;
+                //====================
+                // THE RIGHT KEY
+                //====================
+                if (e.keyCode == 99) keyCamera[3] = true;
             }
             function doKeyUp(e) {
                 //====================
@@ -324,10 +337,23 @@
                 // THE D KEY
                 //====================
                 if (e.keyCode == 68) key[3] = false;
+
                 //====================
-                // THE SPACEBAR KEY
+                // THE UP KEY
                 //====================
-                if (e.keyCode == 32) prova = false;
+                if (e.keyCode == 101) keyCamera[0] = false;
+                //====================
+                // THE DOWN KEY
+                //====================
+                if (e.keyCode == 98) keyCamera[2] = false;
+                //====================
+                // THE LEFT KEY
+                //====================
+                if (e.keyCode == 97) keyCamera[1] = false;
+                //====================
+                // THE RIGHT KEY
+                //====================
+                if (e.keyCode == 99) keyCamera[3] = false;
             }
 
             //definizione parametri iniziali
@@ -364,14 +390,15 @@
 
                 cameraMatrix = m4.lookAt(camera, target, up);
 
-                camera_type = 'default';
+                camera_type = 'debug';
 
+                initDebugCamera();
                 CarInit();
                 initBounds();
             }
 
             var render = async function () {
-               // console.log(px,pz)
+                console.log(px,pz)
                 if (checkEnvironmentLimit(px, pz) && !end) {
                     updateCheckpoint(px,pz);
                     //set projection matrix

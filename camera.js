@@ -1,3 +1,12 @@
+var cx,cz;
+var keyCamera;
+
+function initDebugCamera(){
+    cx=cz=0;
+    keyCamera = [false,false,false,false];
+    D=60; PHI=degToRad(90); THETA=degToRad(90);
+}
+
 var setCamera = {
     'default': setDefaultCamera,
     'highstatic': setHighAndStaticCamera,
@@ -40,12 +49,18 @@ function setCameraOnTheCar() {
 }
 
 function setDebugCamera() {
-    //D=15; PHI=degToRad(40); THETA=degToRad(81);
+    if (keyCamera[1]) cx -= 1.5;
+    if (keyCamera[3]) cx += 1.5;
+  
+    if (keyCamera[0]) cz += 1.5; 
+    if (keyCamera[2]) cz -= 1.5; 
+    
     camera = [D * Math.sin(PHI) * Math.cos(THETA),
     D * Math.sin(PHI) * Math.sin(THETA),
     D * Math.cos(PHI)];
-
-    target = [px, 0, pz];
+        
+    target = [0, 0, -4];
 
     cameraMatrix = m4.lookAt(camera, target, up);
+    cameraMatrix = m4.translate(cameraMatrix, cx,cz,0)
 }
