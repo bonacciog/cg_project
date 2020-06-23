@@ -71,23 +71,20 @@
             uniform mat4 Pmatrix; 
             uniform mat4 Vmatrix;
             uniform mat4 Mmatrix;
-            attribute vec2 a_texcoord;
-            varying vec2 v_texcoord;
+            attribute vec3 color;//the color of the point 
+            varying vec3 vColor;
             void main(void) { //pre-built function
               gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
-              v_texcoord = a_texcoord;
+              vColor=color;
             }
             </script>
 
         <script id="fragment-shader" type="not-javascript">
             precision mediump float; 
-            varying vec2 v_texcoord;
-
-            // The texture.
-            uniform sampler2D u_texture;
-
+            varying vec3 vColor;
             void main(void) {
-                gl_FragColor = texture2D(u_texture, v_texcoord);            }
+              gl_FragColor = vec4(vColor, 1.);
+            }
             </script>
 
         <!-- OBJ Links -->
@@ -104,7 +101,7 @@
         <script type="text/javascript" src="environment.js"></script>
         <script>
 
-            /* function drawObjectFill(objects, object_name, r, g, b) {
+            function drawObjectFill(objects, object_name, r, g, b) {
                 var current_object = getObjectByName(objects, object_name);
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
@@ -113,6 +110,7 @@
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
+                /*========== TO TEST ===================*/
                 var colors = makeGivenVertexColors(current_object.vertices, r, g, b)
                 gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
@@ -125,44 +123,6 @@
                     new Uint16Array(current_object.indices), gl.STATIC_DRAW);
 
                 gl.drawElements(gl.TRIANGLES, current_object.indices.length, gl.UNSIGNED_SHORT, 0);
-            } */
-
-            function drawObjectFill(objects, object_name) {
-                var current_object = getObjectByName(objects, object_name);
-
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
-                gl.bufferData(gl.ARRAY_BUFFER,
-                    new Float32Array(current_object.vertices), gl.STATIC_DRAW);
-                gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
-                gl.enableVertexAttribArray(_position);
-
-                // Turn on the teccord attribute
-                gl.enableVertexAttribArray(texcoordLocation);
-
-                // Bind the position buffer.
-                gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-
-                // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-                gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-                // Tell the shader to use texture unit 0 for u_texture
-                gl.uniform1i(textureLocation, 0);
-
-                // Draw the geometry.
-                gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
-            }
-
-            function setTexcoords(gl) {
-                gl.bufferData(
-                    gl.ARRAY_BUFFER,
-                    new Float32Array(
-                        [
-                        
-
-                        ]
-
-                    ),
-                    gl.STATIC_DRAW);
             }
 
             function drawObjectWire(objects, object_name) {
@@ -206,12 +166,11 @@
             addObject('chassis', './resources/data/chassis.obj', objects);
             addObject('ruota_posteriore', './resources/data/posteriore.obj', objects);
             addObject('ruota_anteriore', './resources/data/anteriore.obj', objects);
+            //addObject('barriera', './resources/data/Barrier.obj', objects);
             addObject('parcheggio', './resources/data/ParkingLot.obj', objects);
             addObject('rettilineo', './resources/data/rettilineo.obj', objects);
             addObject('curva', './resources/data/curva.obj', objects);
             addObject('cono', './resources/data/cono.obj', objects);
-
-            addObject('cube', './resources/data/cube.obj', objects);
             console.log(objects)
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
@@ -255,43 +214,6 @@
             var index_buffer = gl.createBuffer();
             var color_buffer = gl.createBuffer();
             var edge_buffer = gl.createBuffer();
-            /*=============== TEXTURE =========================*/
-            var texcoordBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
-            // Set Texcoords.
-            setTexcoords(gl);
-
-            // Create a texture.
-            var texture = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            // Fill the texture with a 1x1 blue pixel.
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-                new Uint8Array([0, 0, 255, 255]));
-            // Asynchronously load an image
-            var image = new Image();
-            image.src = "resources/images/strada.jpg";
-            image.addEventListener('load', function () {
-                // Now that the image has loaded make copy it to the texture.
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-                // Check if the image is a power of 2 in both dimensions.
-                if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-                    // Yes, it's a power of 2. Generate mips.
-                    gl.generateMipmap(gl.TEXTURE_2D);
-                    console.log('mipmap');
-                } else {
-                    // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                }
-            });
-
-            function isPowerOf2(value) {
-                return (value & (value - 1)) === 0;
-            }
-
 
             //usa libreria webgl-utilis.js
             var shaderprogram = webglUtils.createProgramFromScripts(gl,
@@ -302,8 +224,7 @@
             var _Vmatrix = gl.getUniformLocation(shaderprogram, "Vmatrix");
             var _Mmatrix = gl.getUniformLocation(shaderprogram, "Mmatrix");
             var _position = gl.getAttribLocation(shaderprogram, "position");
-            var texcoordLocation = gl.getAttribLocation(shaderprogram, "a_texcoord");
-            var textureLocation = gl.getUniformLocation(shaderprogram, "u_texture");
+            var _color = gl.getAttribLocation(shaderprogram, "color");
 
             gl.useProgram(shaderprogram);
 
@@ -366,7 +287,7 @@
             /*=================== Drawing =================== */
 
             function doKeyDown(e) {
-                //====================
+                /* //====================
                 // THE W KEY
                 //====================
                 if (e.keyCode == 87) key[0] = true;
@@ -381,7 +302,7 @@
                 //====================
                 // THE D KEY
                 //====================
-                if (e.keyCode == 68) key[3] = true;
+                if (e.keyCode == 68) key[3] = true; */
 
                 //====================
                 // THE UP KEY
@@ -480,7 +401,7 @@
 
             var render = async function () {
                 //console.log(px,pz)
-                if (true/* checkEnvironmentLimit(px, pz) */ && !end) {
+                if (true /* checkEnvironmentLimit(px, pz) */ && !end) {
                     updateCheckpoint(px, pz);
                     //set projection matrix
                     var proj_matrix = m4.perspective(degToRad(fov), aspect, zmin, zmax);
@@ -507,20 +428,29 @@
 
                     gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
-                    drawObjectFill(objects, 'cube');
-                    //drawFloor();
 
-                    /* mo_matrix = m4.identity();
+                    drawFloor();
+
+                    mo_matrix = m4.identity();
 
 
 
                     gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
+                    // DA RIMUOVEREEEEEEEEEEEEEEEEEEEEEE
+                    var road_matrix = m4.identity();
+                    /* bar_matrix = m4.translate(bar_matrix, -2, -2, -15);
+                    bar_matrix = m4.scale(bar_matrix, 0.2, 0.2, 0.2); */
+                    road_matrix = m4.scale(road_matrix, 0.05, 0.05, 0.05);
+                    road_matrix = m4.translate(road_matrix, 0, -30, 0);
+                    road_matrix = m4.yRotate(road_matrix, degToRad(90))
+                    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+                    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
+                    drawObjectWire(objects, 'rettilineo')
 
- */
-                    /*  CarRender();
- 
-                     RoadRender(); */
+                    /* CarRender(); */
+
+                    /* RoadRender(); */
 
                 }
                 else {
