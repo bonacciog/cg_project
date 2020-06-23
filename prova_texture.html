@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+
+<head>
+    <!--per ricaricare sempre la pagina da zero e non usare la cache-->
+    <META HTTP-EQUIV=”Pragma” CONTENT=”no-cache”>
+    <META HTTP-EQUIV=”Cache-Control” CONTENT=”no-cache”>
+    <!--per definire la dimensione e posizione dell'elemento canvas;
+        se i valori di width ed height inpostati qui sono superiori a
+        corrispondenti settati in <canvas width= .. height=.. l'immagine
+        verra' adattata ingrandendola, mentre se i valori sono inferiori,
+        l'immagine verra' adattata rimpicciolendola
+      -->
+    <!-- 
+      <body>         
+          <style type="text/css">
+             canvas { border: 2px solid blue; }
+          </style>
+      </body>
+-->
+    <style>
+        body {
+            background: #dddddd;
+        }
+
+        #my_Canvas {
+            margin: 10px;
+            padding: 10px;
+            background: #ffffff;
+            border: thin inset #aaaaaa;
+        }
+
+        .container {
+            /*to manage text on canvas and webgl */
+            position: relative;
+        }
+
+        #text {
+            /*to manage text on canvas and webgl */
+            background-color: transparent;
+            /* needed because we setcanvas bg color to white */
+            position: absolute;
+            left: 100px;
+            top: 10px;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        <button id="camera">Change camera</button>
+        <button id="reset">Reset game</button>
+    </p>
+    <p>
+        <button id="Button1">Increase D</button>
+        <button id="Button2">Decrease D</button>
+        <button id="Button3">Increase Zm</button>
+        <button id="Button4">Decrease Zm</button>
+        <button id="Button5">Increase fov</button>
+        <button id="Button6">Decrease fov</button>
+    </p>
+
+    <div class="container">
+        <canvas width="600" height="600" id="my_Canvas"></canvas>
+        <!-- to manage text on canvas and webgl -->
+        <canvas width="600" height="150" id="text"></canvas>
+
+        <!-- <script id="vertex-shader" type="not-javascript">
+            attribute vec3 position;
+            uniform mat4 Pmatrix; 
+            uniform mat4 Vmatrix;
+            uniform mat4 Mmatrix;
+            attribute vec3 color;//the color of the point 
+            varying vec3 vColor;
+            void main(void) { //pre-built function
+              gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
+              vColor=color;
+            }
+            </script>
+
+        <script id="fragment-shader" type="not-javascript">
+            precision mediump float; 
+            varying vec3 vColor;
+            void main(void) {
+              gl_FragColor = vec4(vColor, 1.);
+            }
+            </script> -->
+        <script id="vertex-shader" type="not-javascript">
+                attribute vec3 position;
+                uniform mat4 Pmatrix; 
+                uniform mat4 Vmatrix;
+                uniform mat4 Mmatrix;
+                
+                attribute vec2 a_texcoord;
+ 
+                varying vec2 v_texcoord;
+
+                void main(void) { //pre-built function
+                  gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
+                  v_texcoord = a_texcoord;
+                }
+                </script>
+
+        <script id="fragment-shader" type="not-javascript">
+                precision mediump float; 
+                // Passed in from the vertex shader.
+                varying vec2 v_texcoord;
+ 
+                // The texture.
+                uniform sampler2D u_texture;
+
+                void main(void) {
+                     gl_FragColor = texture2D(u_texture, v_texcoord);
+                }
+                </script>
+        <!-- OBJ Links -->
+        <!-- Libraries -->
+        <script type="text/javascript" src="resources/subdiv.js"></script>
+        <script type="text/javascript" src="resources/mesh_utils.js"></script>
+        <script type="text/javascript" src="resources/webgl-utils.js"></script>
+        <script type="text/javascript" src="resources/m4.js"></script>
+        <script type="text/javascript" src="resources/glm_light.js"></script>
+        <script type="text/javascript" src="resources/jquery-3.5.1.js"></script>
+        <script type="text/javascript" src="resources/objects_manager.js"></script>
+        <script type="text/javascript" src="car1.js"></script>
+        <script type="text/javascript" src="camera.js"></script>
+        <script type="text/javascript" src="environment.js"></script>
+        <script>
+
+            
+            /*============= Creating a canvas ======================*/
+            var canvas = document.getElementById('my_Canvas');
+            var gl = canvas.getContext('webgl');
+            //to manage text on canvas and webgl
+            // look up the text canvas.
+            var textCanvas = document.getElementById("text");
+            // make a 2D context for it
+            var ctx = textCanvas.getContext("2d");
+            const S = 1; // size
+            const H = 1; // altezza
+
+            var vertices3 = [-S, H, -S, S, H, -S, S, H, S, -S, H, S,];
+            var indices3 = [0, 1, 2, 0, 2, 3,];
+
+            var vertex_buffer3 = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
+            gl.bufferData(gl.ARRAY_BUFFER,
+                new Float32Array(vertices3), gl.STATIC_DRAW);
+            // Create and store data into color buffer 
+            
+            // Create and store data into index buffer
+            var index_buffer3 = gl.createBuffer();
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer3);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices3), gl.STATIC_DRAW);
+
+            var shaderprogram = webglUtils.createProgramFromScripts(gl,
+                ["vertex-shader", "fragment-shader"]);
+
+            /*======== Associating attributes to vertex shader =====*/
+            var _Pmatrix = gl.getUniformLocation(shaderprogram, "Pmatrix");
+            var _Vmatrix = gl.getUniformLocation(shaderprogram, "Vmatrix");
+            var _Mmatrix = gl.getUniformLocation(shaderprogram, "Mmatrix");
+            var _position = gl.getAttribLocation(shaderprogram, "position");
+            //var _color = gl.getAttribLocation(shaderprogram, "color");
+            var texcoordLocation = gl.getAttribLocation(shaderprogram, "a_texcoord");
+
+            gl.useProgram(shaderprogram);
+
+            function setTexcoords(gl) {
+                gl.bufferData(
+                    gl.ARRAY_BUFFER,
+                    new Float32Array(
+                        [
+                            // Front
+                            0.0, 0.0,
+                            1.0, 0.0,
+                            1.0, 1.0,
+                            0.0, 1.0,
+                            // Back
+                            0.0, 0.0,
+                            1.0, 0.0,
+                            1.0, 1.0,
+                            0.0, 1.0,
+                            // Top
+                            0.0, 0.0,
+                            1.0, 0.0,
+                            1.0, 1.0,
+                            0.0, 1.0,
+                            // Bottom
+                            0.0, 0.0,
+                            1.0, 0.0,
+                            1.0, 1.0,
+                            0.0, 1.0,
+                            // Right
+                            0.0, 0.0,
+                            1.0, 0.0,
+                            1.0, 1.0,
+                            0.0, 1.0,
+                            // Left
+                            0.0, 0.0,
+                            1.0, 0.0,
+                            1.0, 1.0,
+                            0.0, 1.0,
+                        ]),
+                    gl.STATIC_DRAW);
+            }
+            var image = new Image();
+            image.src = "resources/images/noodles.jpg";
+            image.addEventListener('load', function () {
+                // Now that the image has loaded make copy it to the texture.
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                // Check if the image is a power of 2 in both dimensions.
+                if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+                    // Yes, it's a power of 2. Generate mips.
+                    gl.generateMipmap(gl.TEXTURE_2D);
+                    //console.log('mipmap');
+                } else {
+                    // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                }
+            });
+
+             </script>
+</body>
+
+</html>
