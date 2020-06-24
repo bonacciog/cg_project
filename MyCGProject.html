@@ -166,7 +166,7 @@
             addObject('chassis', './resources/data/chassis.obj', objects);
             addObject('ruota_posteriore', './resources/data/posteriore.obj', objects);
             addObject('ruota_anteriore', './resources/data/anteriore.obj', objects);
-            //addObject('barriera', './resources/data/Barrier.obj', objects);
+            addObject('cube', './resources/data/cube.obj', objects);
             addObject('parcheggio', './resources/data/ParkingLot.obj', objects);
             addObject('rettilineo', './resources/data/rettilineo.obj', objects);
             addObject('curva', './resources/data/curva.obj', objects);
@@ -429,18 +429,19 @@
                     gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
 
-                    drawFloor();
+                    //drawFloor();
 
                     mo_matrix = m4.identity();
 
 
 
                     gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
+                    drawObjectFill(objects, 'cube', 0, 1, 0.6);
+                    drawObjectWire(objects, 'cube');
 
+                    /* CarRender();
 
-                    CarRender();
-
-                    RoadRender();
+                    RoadRender(); */
 
                 }
                 else {
