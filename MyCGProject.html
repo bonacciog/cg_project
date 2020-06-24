@@ -77,10 +77,15 @@
             varying vec3 vColor;
 
             varying vec2 v_texcoord;
+
+            uniform float isColor;
+            varying float f_isColor;
+
             void main(void) { //pre-built function
               gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);
               v_texcoord = a_texcoord;
               vColor = color;
+              f_isColor = isColor;
             }
             </script>
 
@@ -89,11 +94,16 @@
             varying vec2 v_texcoord;
             varying vec3 vColor;
 
+            varying float f_isColor;
+
             // The texture.
             uniform sampler2D u_texture0;
 
             void main(void) {
-                gl_FragColor = texture2D(u_texture0, v_texcoord) + vec4(vColor, 1.);
+                if(f_isColor > 0.0)
+                    gl_FragColor =  vec4(vColor, 1.);
+                else
+                    gl_FragColor =  texture2D(u_texture0, v_texcoord);
             }
             </script>
 
@@ -120,6 +130,9 @@
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
+                // true
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 1.0);
+
                 var colors = makeGivenVertexColors(current_object.vertices, r, g, b)
                 gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
@@ -132,7 +145,6 @@
                     new Uint16Array(current_object.indices), gl.STATIC_DRAW);
 
                 gl.drawElements(gl.TRIANGLES, current_object.indices.length, gl.UNSIGNED_SHORT, 0);
-                gl.disableVertexAttribArray(_color);
 
             }
 
@@ -145,6 +157,11 @@
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
+
+
+
+                // false
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 0.0);
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
                 // Set Texcoords.
@@ -166,7 +183,6 @@
 
                 // Draw the geometry.
                 gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
-                gl.disableVertexAttribArray(texcoordLocation);
             }
 
 
@@ -178,6 +194,9 @@
                     new Float32Array(current_object.vertices), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
+
+                // true
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 1.0);
 
                 var colors = makeGivenVertexColors(current_object.vertices, 0, 0, 0)
                 gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
@@ -192,7 +211,6 @@
                     new Uint16Array(current_object.edges), gl.STATIC_DRAW);
 
                 gl.drawElements(gl.LINES, current_object.edges.length, gl.UNSIGNED_SHORT, 0);
-                gl.disableVertexAttribArray(_color);
 
             }
 
@@ -216,7 +234,9 @@
             addObject('chassis', './resources/data/chassis.obj', false, objects);
             addObject('ruota_posteriore', './resources/data/posteriore.obj', false, objects);
             addObject('ruota_anteriore', './resources/data/anteriore.obj', false, objects);
-            addObject('parcheggio', './resources/data/ParkingLot.obj', false, objects);
+            //addObject('parcheggio', './resources/data/ParkingLot.obj', false, objects);
+            addObject('parcheggio', './resources/data/parcheggio.obj', false, objects);
+            addObject('parcheggio_pav', './resources/data/parcheggio_pavimento.obj', false, objects);
             addObject('strada', './resources/data/rettilineo_strada.obj', true, objects);
             addObject('bordi', './resources/data/rettilineo_bordi.obj', false, objects);
             addObject('curva', './resources/data/curva.obj', false, objects);
@@ -270,7 +290,6 @@
             var texcoordBuffer = gl.createBuffer();
             var position_buffer = gl.createBuffer();
 
-
             //usa libreria webgl-utilis.js
             var shaderprogram = webglUtils.createProgramFromScripts(gl,
                 ["vertex-shader", "fragment-shader"]);
@@ -297,9 +316,9 @@
             }
 
             function loadImages(urls, callback) {
-                
+
                 var imagesToLoad = urls.length;
-                
+
                 // Called each time an image finished loading.
                 var onImageLoad = function () {
                     --imagesToLoad;
@@ -322,15 +341,21 @@
                     var texture = gl.createTexture();
                     gl.bindTexture(gl.TEXTURE_2D, texture);
 
-                    // Set the parameters so we can render any size image.
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
+                    
+                    // Check if the image is a power of 2 in both dimensions.
+                    if (isPowerOf2(images[ii].width) && isPowerOf2(images[ii].height)) {
+                        // Yes, it's a power of 2. Generate mips.
+                        gl.generateMipmap(gl.TEXTURE_2D);
+                        //console.log('mipmap');
+                    } else {
+                        // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    }
                     // Upload the image into the texture.
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[ii]);
-
                     // add the texture to the array of textures.
                     textures.push(texture);
                 }
@@ -338,9 +363,9 @@
             /*=======================================================================*/
 
 
-            /* function isPowerOf2(value) {
+            function isPowerOf2(value) {
                 return (value & (value - 1)) === 0;
-            } */
+            }
 
             function degToRad(d) {
                 return d * Math.PI / 180;
@@ -486,10 +511,11 @@
 
             var ResetScene = function () {
                 var srcs = [
-                    "./resources/images/strada.jpg"
+                    "./resources/images/strada.jpg",
+                    "./resources/images/MyFoto.png",
                 ];
                 loadImages(
-                    srcs, 
+                    srcs,
                     prepareTextures
                 );
 
@@ -561,9 +587,9 @@
 
 
 
-                     CarRender();
- 
-                     RoadRender();
+                    CarRender();
+
+                    RoadRender();
 
                 }
                 else {

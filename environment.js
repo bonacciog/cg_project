@@ -290,8 +290,7 @@ function RoadRender() {
         obs_matrix = m4.translate(obs_matrix, element.x, -1, element.z);
         obs_matrix = m4.scale(obs_matrix, 0.5, 0.5, 0.5)
         gl.uniformMatrix4fv(_Mmatrix, false, obs_matrix);
-        drawObjectFill(objects, 'cono', 0, 0, 0);
-        drawObjectWire(objects, 'cono');
+        drawObjectFill(objects, 'cono', 1, 0.46, 0.08);
     });
 
     var parking_matrix = m4.identity();
@@ -299,8 +298,17 @@ function RoadRender() {
     parking_matrix = m4.scale(parking_matrix, 20, 20, 20)
     parking_matrix = m4.yRotate(parking_matrix, degToRad(90))
     gl.uniformMatrix4fv(_Mmatrix, false, parking_matrix);
+    
     drawObjectFill(objects, 'parcheggio', 0.7, 0.7, 0.7);
     drawObjectWire(objects, 'parcheggio');
+
+
+/*     var parking_matrix = m4.identity();
+    parking_matrix = m4.translate(parking_matrix, -356.5, -1.5, -301);
+    parking_matrix = m4.scale(parking_matrix, 20, 20, 20)
+    parking_matrix = m4.yRotate(parking_matrix, degToRad(90))
+    gl.uniformMatrix4fv(_Mmatrix, false, parking_matrix);
+    drawObjectTexture(objects, 'parcheggio_pav', 0); */
 }
 
 

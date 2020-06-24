@@ -1,25 +1,5 @@
 # Blender MTL File: 'None'
-# Material Count: 8
-
-newmtl axle
-Ns 96.078443
-Ka 1.000000 1.000000 1.000000
-Kd 0.050976 0.050976 0.050976
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-
-newmtl chassis
-Ns 96.078443
-Ka 1.000000 1.000000 1.000000
-Kd 0.121860 0.121860 0.121860
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
+# Material Count: 5
 
 newmtl grill
 Ns 96.078443
@@ -60,16 +40,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-
-newmtl roofrackmat
-Ns 96.078443
-Ka 1.000000 1.000000 1.000000
-Kd 0.023279 0.023279 0.023279
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
+map_Kd H:\\Ingegneria Informatica\\Ingegneria Informatica M\\2° Anno\\Fondamenti di Computer Graphics\\cg_project\\resources\\images\\MyFoto.png
 
 newmtl window
 Ns 96.078443
@@ -80,3 +51,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd H:\\Ingegneria Informatica\\Ingegneria Informatica M\\2° Anno\\Fondamenti di Computer Graphics\\cg_project\\resources\\images\\MyFoto.png

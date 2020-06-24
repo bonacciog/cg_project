@@ -1,5 +1,5 @@
 # Blender MTL File: 'None'
-# Material Count: 5
+# Material Count: 3
 
 newmtl default
 Ns 0.000000
@@ -10,6 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
+map_Kd H:\\Ingegneria Informatica\\Ingegneria Informatica M\\2° Anno\\Fondamenti di Computer Graphics\\cg_project\\resources\\images\\MyFoto.png
 
 newmtl Материал
 Ns 50.000007
@@ -20,26 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 3
-
-newmtl Материал.1
-Ns 50.000007
-Ka 1.000000 1.000000 1.000000
-Kd 1.000000 1.000000 1.000000
-Ks 1.000000 1.000000 1.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 3
-
-newmtl Материал.2
-Ns 50.000007
-Ka 1.000000 1.000000 1.000000
-Kd 0.320000 0.320000 0.320000
-Ks 1.000000 1.000000 1.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 3
+map_Kd H:\\Ingegneria Informatica\\Ingegneria Informatica M\\2° Anno\\Fondamenti di Computer Graphics\\cg_project\\resources\\images\\MyFoto.png
 
 newmtl Материал.4
 Ns 50.000007
@@ -50,3 +32,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 3
+map_Kd H:\\Ingegneria Informatica\\Ingegneria Informatica M\\2° Anno\\Fondamenti di Computer Graphics\\cg_project\\resources\\images\\MyFoto.png
