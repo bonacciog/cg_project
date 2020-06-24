@@ -144,33 +144,38 @@ function RoadRender() {
     road_matrix = m4.translate(road_matrix, 0, -30, 0);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo')
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
     
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
 
     road_matrix = m4.copy(road_matrix);
@@ -183,14 +188,16 @@ function RoadRender() {
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
     road_matrix = m4.translate(road_matrix, 677, 100, 110);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 605, -99, 140);
@@ -202,8 +209,9 @@ function RoadRender() {
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, -636, 99.5, 135);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, -655, -99, -110);
@@ -230,44 +238,51 @@ function RoadRender() {
     road_matrix = m4.translate(road_matrix, 110, 99.5, -680);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
     gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
-    drawObjectFill(objects, 'rettilineo', 0.7, 0.7, 0.7);
-    drawObjectWire(objects, 'rettilineo');
+    drawObjectFill(objects, 'bordi', 0.7, 0.7, 0.7);
+    drawObjectWire(objects, 'bordi')
+    drawObjectTexture(objects, 'strada', 0);
 
     
     obstacles.forEach(element => {
