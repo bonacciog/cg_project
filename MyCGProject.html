@@ -129,10 +129,40 @@
 
             function drawObjectFill(objects, object_name) {
                 var current_object = getObjectByName(objects, object_name);
+                var vertices=
+    [
+     0
+, 0
+, 0
+, 1
+, 1
+, -1
+, 1
+, -1
+, -1
+, 1
+, 1
+, 1
+, 1
+, -1
+, 1
+, -1
+, 1
+, -1
+, -1
+, -1
+, -1
+, -1
+, 1
+, 1
+, -1
+, -1
+, 1
 
+    ];
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
-                    new Float32Array(current_object.vertices), gl.STATIC_DRAW);
+                    new Float32Array(vertices), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
@@ -149,7 +179,7 @@
                 gl.uniform1i(textureLocation, 0);
 
                 // Draw the geometry.
-                gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+                gl.drawArrays(gl.TRIANGLES, 0, 6*6);
             }
 
             function setTexcoords(gl) {
@@ -157,8 +187,36 @@
                     gl.ARRAY_BUFFER,
                     new Float32Array(
                         [
-                        
-
+                         0
+, 0
+, 0.625
+, 0.5
+, 0.875
+, 0.5
+, 0.875
+, 0.75
+, 0.625
+, 0.75
+, 0.375
+, 0.75
+, 0.625
+, 1
+, 0.375
+, 1
+, 0.375
+, 0
+, 0.625
+, 0
+, 0.625
+, 0.25
+, 0.375
+,0.25
+, 0.125
+, 0.5
+, 0.375
+, 0.5
+, 0.125
+, 0.75
                         ]
 
                     ),

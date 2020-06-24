@@ -690,6 +690,7 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 		  model.vcolors[3 * i + 1]=1.0;
 		  model.vcolors[3 * i + 2]=1.0;
 	  }
+	  console.log(model)
 	  return mesh;
 	}
 
