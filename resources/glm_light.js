@@ -536,7 +536,7 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 	}
 	
 
-	function SecondPass(model, data, mesh) {
+	function SecondPass(model, data, mesh, texflag) {
 	    var  numvertices;        /* number of vertices in model */
 	    var  numnormals;         /* number of normals in model */
 	    var  numtexcoords;       /* number of texcoords in model */
@@ -623,8 +623,8 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 		    /* eat up rest of line */
 		    //fgets(buf, sizeof(buf), file);
 
-		    group = model.FindGroup(buf);
-		    group.material = material;
+		    /* group = model.FindGroup(buf);
+		    group.material = material; */
 		    break;
 		case 'f':               /* face */
 		    var f1 = buf[1].split('/');
@@ -691,10 +691,38 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 		  model.vcolors[3 * i + 2]=1.0;
 	  }
 	  console.log(model)
+	  if(texflag)
+	  	mesh.texcoords = getTexCoordsFromModel(model);
 	  return mesh;
 	}
 
-	function ReadOBJ(data,mesh) {
+	function getTexCoordsFromModel(model){
+		var triangles = model.triangles;
+		var texcoords = model.texcoords.slice(2,model.texcoords.length);
+		var texcoords_result = new Array();
+
+		for(let i = 0; i<triangles.length; i++){
+			let cur_tr = triangles[i];
+			let t_indices = cur_tr.tindices;
+			let tex_face = new Array();
+			for(let t=0; t<t_indices.length && t_indices[t]>0; t++){
+				/* let tex_index = t_indices[t];
+				texcoords_result.push(texcoords[tex_index]); */
+				tex_face.push(t_indices[t]); 
+			}
+			texcoords_result.push({
+				texface: tex_face
+			})
+		}
+
+		return {
+			texcoords_face: texcoords_result,
+			texcoords : texcoords
+		};
+	}
+
+
+	function ReadOBJ(data,mesh,texflag) {
 	    /* allocate a new model */
 	    /*var model = { 
 		    //pathname      : strdup(filename);
@@ -750,8 +778,9 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 	    /* rewind to beginning of file and read in the data this pass */
 	    //rewind(file);
 	    
-	    mesh = SecondPass(model, data, mesh);
-	    
+	     
+		mesh = SecondPass(model, data, mesh,texflag);
+		
 	    /* close the file */
 	    return mesh;
 	}

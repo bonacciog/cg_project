@@ -8,7 +8,7 @@
  * @param {*} object_name 
  * @param {*} obj_path 
  */
-function addObject(object_name, obj_path, objects) {
+function addObject(object_name, obj_path, texflag, objects) {
 
     if (getObjectByName(objects, object_name) != null)
         return;
@@ -26,7 +26,7 @@ function addObject(object_name, obj_path, objects) {
     var mesh = new subd_mesh();
 
     // parse obj from glm_light library
-    mesh = ReadOBJ(data, mesh);
+    mesh = ReadOBJ(data, mesh, texflag);
 
     // add edge
     mesh = LoadSubdivMesh(mesh);
@@ -37,7 +37,9 @@ function addObject(object_name, obj_path, objects) {
         mesh: mesh,
         vertices: getVertices(mesh),
         indices: getTriangleIndices(mesh),
-        edges: getEdges(mesh)
+        edges: getEdges(mesh),
+        texcoords :  texflag ? getTexCoords(mesh) : null,
+        positions :  texflag ? getPositions(mesh) : null
     });
 
 }
@@ -61,6 +63,115 @@ function getTriangleIndices(mesh) {
         }
     }
     return indices;
+}
+
+/**
+ * 
+ * @param {*} mesh 
+ */
+function getTexCoords(mesh) {
+    if (!mesh)
+        return null;
+
+    let tex_cords_splitted = splitBy2(mesh.texcoords.texcoords);
+    var texcoords = new Array();
+    let texcoords_faces = mesh.texcoords.texcoords_face;
+    for(let i=0; i<texcoords_faces.length; i++){
+        let cur_face = texcoords_faces[i].texface;
+        
+        for(let k =1; k<cur_face.length-1; k++){
+            texcoords.push(cur_face[0]);
+            texcoords.push(cur_face[k]);
+            texcoords.push(cur_face[k+1]);
+        }
+    }
+    
+    texcoords = convertToCoords2(tex_cords_splitted, texcoords);
+
+    return texcoords;
+
+}
+
+/**
+ * 
+ * @param {*} mesh 
+ */
+
+function getPositions(mesh){
+    if (!mesh)
+        return null;
+
+    var indices = getTriangleIndices(mesh);
+
+    var vertices = splitBy3(getVertices(mesh));
+   
+    var positions = convertToCoords3(vertices, indices);
+
+    return positions;
+}
+
+/**
+ * 
+ * @param {*} array 
+ */
+function splitBy3(array){
+    var result = new Array();
+
+    for(let i=0; i<array.length; i=i+3){
+        result.push({
+            coord:[array[i], array[i+1], array[i+2]]
+        })
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param {*} vertices 
+ * @param {*} indices 
+ */
+function convertToCoords3(vertices, indices) {
+    var result = new Array();
+
+    for(let i=0; i<indices.length; i++){
+        result.push(vertices[indices[i]].coord[0]);
+        result.push(vertices[indices[i]].coord[1]);
+        result.push(vertices[indices[i]].coord[2]);
+    }
+
+    return result;
+}
+
+/**
+ * 
+ * @param {*} tex_cords_splitted 
+ * @param {*} texcoords 
+ */
+function convertToCoords2(tex_cords_splitted, texcoords) {
+    var result = new Array();
+    
+    for(let i=0; i<texcoords.length; i++){
+        result.push(tex_cords_splitted[texcoords[i]].coord[0]);
+        result.push(tex_cords_splitted[texcoords[i]].coord[1]);
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param {*} array 
+ */
+function splitBy2(array){
+    var result = new Array();
+    result.push({
+        coord:[NaN,NaN]
+    });
+    for(let i=0; i<array.length; i=i+2){
+        result.push({
+            coord:[array[i], array[i+1]]
+        })
+    }
+    return result;
 }
 
 /**
