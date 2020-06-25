@@ -141,8 +141,9 @@ function CarRender(allowed_movement) {
   // sono nello spazio MACCHINA
   //drawAxis(); // disegno assi spazio macchina
   gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-  drawObjectFill(objects, 'chassis', 0, 1, 0.6);
-  drawObjectWire(objects, 'chassis');
+  drawObjectTexture(objects, "chassis_body", 2);
+  drawObjectFill(objects, 'chassis_o', 0, 0, 0);
+  //drawObjectWire(objects, 'chassis');
 
   // ruota posteriore S
   mo_matrix1 = m4.copy(mo_matrix);

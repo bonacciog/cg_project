@@ -38,24 +38,27 @@ function addObject(object_name, obj_path, texflag, objects) {
         vertices: getVertices(mesh),
         indices: getTriangleIndices(mesh),
         edges: getEdges(mesh),
-        texcoords :  texflag ? getTexCoords(mesh) : null,
-        positions :  texflag ? getPositions(mesh) : null
+        texcoords: texflag ? getTexCoords(mesh) : null,
+        positions: texflag ? getPositions(mesh) : null
     });
 
+    
 }
+
 
 /**
  * Computes triangle indices from mesh
  * @param {*} objects 
  * @param {*} object_name 
  */
-function getTriangleIndices(mesh) {
+function getTriangleIndices(mesh, nome) {
     if (!mesh)
         return null;
 
     var indices = new Array();
 
     for (let i = 0; i <= mesh.nface; i++) {
+        
         for (let k = 1; k < verticesNumberOnFace(mesh.face[i]) - 1; k++) {
             indices.push(mesh.face[i].vert[0]);
             indices.push(mesh.face[i].vert[k]);

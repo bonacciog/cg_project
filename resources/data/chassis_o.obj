@@ -1,6 +1,6 @@
 # Blender v2.82 (sub 7) OBJ File: ''
 # www.blender.org
-mtllib chassis_other.mtl
+mtllib chassis_o.mtl
 o axlef_Cylinder.001
 v 1.267943 -0.239461 -2.026772
 v -1.088035 -0.239461 -1.971778

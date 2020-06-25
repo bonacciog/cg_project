@@ -60,6 +60,16 @@
         <button id="Button5">Increase fov</button>
         <button id="Button6">Decrease fov</button>
     </p>
+    <p>
+        <button id="UP">UP</button>
+        <button id="DOWN">DOWN</button>
+        <button id="LEFT">LEFT</button>
+        <button id="RIGHT">RIGHT</button>
+    </p>
+
+    <p>
+        <button id="check">Check Parking</button>
+    </p>
 
     <div class="container">
         <canvas width="600" height="600" id="my_Canvas"></canvas>
@@ -115,8 +125,8 @@
         <script type="text/javascript" src="resources/m4.js"></script>
         <script type="text/javascript" src="resources/glm_light.js"></script>
         <script type="text/javascript" src="resources/jquery-3.5.1.js"></script>
-        <script type="text/javascript" src="resources/objects_manager.js"></script>
-        <script type="text/javascript" src="car1.js"></script>
+        <script type="text/javascript" src="objects_manager.js"></script>
+        <script type="text/javascript" src="car.js"></script>
         <script type="text/javascript" src="camera.js"></script>
         <script type="text/javascript" src="environment.js"></script>
         <script>
@@ -182,7 +192,7 @@
 
 
                 // Draw the geometry.
-                gl.drawArrays(gl.TRIANGLES, 0, 6 * 6);
+                gl.drawArrays(gl.TRIANGLES, 0, current_object.positions.length / 3);
             }
 
 
@@ -231,31 +241,32 @@
             var images = new Array();
 
             objects = new Array();
-            addObject('chassis', './resources/data/chassis.obj', false, objects);
+            addObject('chassis_body', './resources/data/chassis_t.obj', true, objects);
+            addObject('chassis_o', './resources/data/chassis_o.obj', false, objects);
             addObject('ruota_posteriore', './resources/data/posteriore.obj', false, objects);
             addObject('ruota_anteriore', './resources/data/anteriore.obj', false, objects);
-            //addObject('parcheggio', './resources/data/ParkingLot.obj', false, objects);
-            addObject('parcheggio', './resources/data/parcheggio.obj', false, objects);
-            addObject('parcheggio_pav', './resources/data/parcheggio_pavimento.obj', false, objects);
+            addObject('parcheggio', './resources/data/ParkingLot.obj', true, objects);
             addObject('strada', './resources/data/rettilineo_strada.obj', true, objects);
-            addObject('bordi', './resources/data/rettilineo_bordi.obj', false, objects);
-            addObject('curva', './resources/data/curva.obj', false, objects);
+            addObject('bordi', './resources/data/rettilineo_bordo.obj', true, objects);
+            addObject('curva', './resources/data/curva.obj', true, objects);
             addObject('cono', './resources/data/cono.obj', false, objects);
-
-
+            addObject('casa', './resources/data/Build.obj', true, objects);
             console.log(objects)
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
             const S = 1000; // size
             const H = -2; // altezza
             var vertices3 = [-S, H, -S, S, H, -S, S, H, S, -S, H, S,];
-            var colors3 = [0, 0.7, 0, 0, 0.7, 0, 0, 0.7, 0, 0, 0.7, 0];
+            var colors3 = [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7];
             var indices3 = [0, 1, 2, 0, 2, 3,];
 
             var vertex_buffer3 = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
             gl.bufferData(gl.ARRAY_BUFFER,
                 new Float32Array(vertices3), gl.STATIC_DRAW);
+
+
+
             // Create and store data into color buffer 
             var color_buffer3 = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer3);
@@ -270,6 +281,9 @@
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
+
+                // true
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 1.0);
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer3);
                 gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
@@ -342,18 +356,18 @@
                     gl.bindTexture(gl.TEXTURE_2D, texture);
 
 
-                    
-                    // Check if the image is a power of 2 in both dimensions.
+
+                    /* // Check if the image is a power of 2 in both dimensions.
                     if (isPowerOf2(images[ii].width) && isPowerOf2(images[ii].height)) {
                         // Yes, it's a power of 2. Generate mips.
                         gl.generateMipmap(gl.TEXTURE_2D);
                         //console.log('mipmap');
-                    } else {
-                        // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                    }
+                    } else { */
+                    // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    //}
                     // Upload the image into the texture.
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[ii]);
                     // add the texture to the array of textures.
@@ -417,6 +431,23 @@
             document.getElementById("Button5").onclick = function () { fov *= 1.1; fov *= 1.1 };
             document.getElementById("Button6").onclick = function () { fov *= 0.9; fov *= 0.9 };
 
+            document.getElementById("UP").onmouseup = function () { key[0] = false };
+            document.getElementById("DOWN").onmouseup = function () { key[2] = false };
+            document.getElementById("LEFT").onmouseup = function () { key[1] = false };
+            document.getElementById("RIGHT").onmouseup = function () { key[3] = false };
+            document.getElementById("UP").onmousedown = function () { key[0] = true };
+            document.getElementById("DOWN").onmousedown = function () { key[2] = true };
+            document.getElementById("LEFT").onmousedown = function () { key[1] = true };
+            document.getElementById("RIGHT").onmousedown = function () { key[3] = true };
+
+            document.getElementById("check").onmousedown = function () {
+                if (checkWin(px, pz)) {
+                    ctx.font = '40pt Calibri';
+                    ctx.fillStyle = 'green';
+                    ctx.fillText('HAI PRESO LA PATENTE', 90, 100);
+                    end = true;
+                } 
+            }
             canvas.onmousedown = mouseDown;
             canvas.onmouseup = mouseUp;
             canvas.mouseout = mouseUp;
@@ -513,6 +544,13 @@
                 var srcs = [
                     "./resources/images/strada.jpg",
                     "./resources/images/MyFoto.png",
+                    "./resources/images/mimetica.jpg",
+                    "./resources/images/marciapiede.jpg",
+                    "./resources/images/curva.jpg",
+                    "./resources/images/casa.jpg",
+                    "./resources/images/casa1.jpg",
+                    "./resources/images/casa2.jpg",
+                    "./resources/images/casa3.jpg"
                 ];
                 loadImages(
                     srcs,
@@ -521,7 +559,7 @@
 
                 aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
                 zmin = 1;
-                zmax = 140;
+                zmax = 300;
                 fov = 40;
 
                 THETA = degToRad(0), PHI = degToRad(90); // per ottenere 0,4,0 90 90 4
@@ -540,7 +578,7 @@
 
                 cameraMatrix = m4.lookAt(camera, target, up);
 
-                camera_type = 'default';
+                camera_type = 'debug';
 
                 initDebugCamera();
                 CarInit();
@@ -575,21 +613,21 @@
 
                     mo_matrix = m4.identity();
 
-                    gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
+                    gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
                     drawFloor();
 
-                    mo_matrix = m4.identity();
 
 
 
-                    gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
 
 
 
                     CarRender();
-
+                    //drawObjectTexture(objects, 'cube', 2);
                     RoadRender();
+
+
 
                 }
                 else {

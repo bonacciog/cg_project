@@ -669,6 +669,16 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 			    //numtriangles++;
 			    model.triangles[numtriangles].nv = 4;
 			}
+			
+			// FACCIA POLIGONALE
+			for(let i=5; i<buf.length; i++){
+				f = buf[i].split('/');
+				model.triangles[numtriangles].vindices[i-1] = parseFloat(f[0]);// - 1;
+			    model.triangles[numtriangles].tindices[i-1] = parseFloat(f[1]);// - 1;
+				model.triangles[numtriangles].nindices[i-1] = parseFloat(f[2]);
+				model.triangles[numtriangles].nv++;
+			}
+
 //			model.triangles[numtriangles].nv = 4;//buf.length - 1;
 			model.groups[group].triangles[model.groups[group].numtriangles++] = numtriangles;
 	      	numtriangles++;
@@ -692,7 +702,8 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 	  }
 	  //console.log(model)
 	  if(texflag)
-	  	mesh.texcoords = getTexCoordsFromModel(model);
+		  mesh.texcoords = getTexCoordsFromModel(model);
+	  
 	  return mesh;
 	}
 
