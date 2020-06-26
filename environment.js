@@ -143,124 +143,124 @@ function RoadRender() {
     road_matrix = m4.scale(road_matrix, 0.05, 0.05, 0.05);
     road_matrix = m4.translate(road_matrix, 0, -30, 0);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 634.5, -99, -135);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'curva', 4);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
     road_matrix = m4.translate(road_matrix, 677, 100, 110);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 605, -99, 140);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'curva', 4);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, -636, 99.5, 135);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, -655, -99, -110);
     road_matrix = m4.yRotate(road_matrix, degToRad(-90))
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'curva', 4);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, -685, 0, 305);
     road_matrix = m4.yRotate(road_matrix, degToRad(180))
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'curva', 4);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, -27, 0, -660);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'curva', 4);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 110, 99.5, -680);
     road_matrix = m4.yRotate(road_matrix, degToRad(90))
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
     road_matrix = m4.copy(road_matrix);
     road_matrix = m4.translate(road_matrix, 661.5, 0, 0);
-    gl.uniformMatrix4fv(_Mmatrix, false, road_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, road_matrix);
     drawObjectTexture(objects, 'bordi', 3);
     drawObjectTexture(objects, 'strada', 0);
 
@@ -269,7 +269,7 @@ function RoadRender() {
         var obs_matrix = m4.identity();
         obs_matrix = m4.translate(obs_matrix, element.x, -1, element.z);
         obs_matrix = m4.scale(obs_matrix, 0.5, 0.5, 0.5)
-        gl.uniformMatrix4fv(_Mmatrix, false, obs_matrix);
+        gl.uniformMatrix4fv(_MVmatrix, false, obs_matrix);
         drawObjectFill(objects, 'cono', 1, 0.46, 0.08);
     });
 
@@ -277,98 +277,105 @@ function RoadRender() {
     parking_matrix = m4.translate(parking_matrix, -356.5, -1.5, -301);
     parking_matrix = m4.scale(parking_matrix, 20, 20, 20)
     parking_matrix = m4.yRotate(parking_matrix, degToRad(90))
-    gl.uniformMatrix4fv(_Mmatrix, false, parking_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, parking_matrix);
     drawObjectTexture(objects, 'parcheggio', 1);
 
     var house_matrix = m4.identity();
     house_matrix = m4.translate(house_matrix, 22, -0.5, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     //house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 8);
+
+     var house_matrix1 = m4.identity();
+     house_matrix1 = m4.translate(house_matrix1, -122, -0.5, -156)
+    //house_matrix = m4.scale(house_matrix, 5, 5, 5)
+    house_matrix1 = m4.yRotate(house_matrix1, degToRad(45));
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix1);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);;
     house_matrix = m4.translate(house_matrix, -44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     //house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -30)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);;
     house_matrix = m4.translate(house_matrix, 0, 0, -30)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     //house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);;
     house_matrix = m4.translate(house_matrix, -44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     //house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -30)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);;
     house_matrix = m4.translate(house_matrix, 0, 0, -30)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     //house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);;
     house_matrix = m4.translate(house_matrix, -44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     //house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -28)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -5, 0, -30)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     house_matrix = m4.yRotate(house_matrix, degToRad(45));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
 
@@ -378,63 +385,63 @@ function RoadRender() {
     house_matrix = m4.translate(house_matrix, -30, 0, -13)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
 
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -44, 0, 44)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -44)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, 44)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -46, 0, -44)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -30)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 44, 0, 0)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     // house_matrix = m4.yRotate(house_matrix, degToRad(90));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -34, 0, -38)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     house_matrix = m4.yRotate(house_matrix, degToRad(45));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
@@ -443,14 +450,14 @@ function RoadRender() {
     house_matrix = m4.yRotate(house_matrix, degToRad(-45));
 
     house_matrix = m4.translate(house_matrix, 30, 0, -10)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 44, 0, 38)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
     house_matrix = m4.yRotate(house_matrix, degToRad(45));
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
@@ -458,7 +465,7 @@ function RoadRender() {
     house_matrix = m4.translate(house_matrix, 10, 0, -38)
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
 
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
@@ -466,7 +473,7 @@ function RoadRender() {
     house_matrix = m4.yRotate(house_matrix, degToRad(45));
     //house_matrix = m4.scale(house_matrix, 5, 5, 5)
 
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
@@ -474,68 +481,68 @@ function RoadRender() {
     house_matrix = m4.yRotate(house_matrix, degToRad(-45));
 
     house_matrix = m4.translate(house_matrix, -30, 0, -10)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
 
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
     house_matrix = m4.copy(house_matrix);
 
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -30, 0, 44)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -44)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
     
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, 44)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
      house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -44)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
-    drawObjectTexture(objects, 'casa', 5);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
+    drawObjectTexture(objects, 'casa', 6);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, 44)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 8);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, -30, 0, 0)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 7);
 
     house_matrix = m4.copy(house_matrix);
     house_matrix = m4.translate(house_matrix, 0, 0, -44)
-    gl.uniformMatrix4fv(_Mmatrix, false, house_matrix);
+    gl.uniformMatrix4fv(_MVmatrix, false, house_matrix);
     drawObjectTexture(objects, 'casa', 6);
 
 
@@ -705,7 +712,7 @@ function checkWin(px,pz){
     let parking_slot_x = [-370, -363];
     let parking_slot_z = [-266, -282]
     console.log(px,pz)
-        /* =================================== COFANO ==========================================*/
+    /* =================================== COFANO ==========================================*/
     // Rotazione rispetto a un punto
     // traslo nell'origine
     let origin_cofano = [px - px, pz - r - pz];
@@ -737,7 +744,7 @@ function checkWin(px,pz){
     let pos_bag = [origin_bag_rot[1] + px, origin_bag_rot[0] + pz];
 
 
-    return !(pos_cofano[0] >= parking_slot_x[0] && pos_cofano[0] <= parking_slot_x[1]
+    return (pos_cofano[0] >= parking_slot_x[0] && pos_cofano[0] <= parking_slot_x[1]
         && pos_cofano[1] <= parking_slot_z[0] && pos_cofano[1] >= parking_slot_z[1]
         && pos_bag[0] >= parking_slot_x[0] && pos_bag[0] <= parking_slot_x[1]
         && pos_bag[1] <= parking_slot_z[0] && pos_bag[1] >= parking_slot_z[1]) && checkpoint === 11 ;

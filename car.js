@@ -140,8 +140,9 @@ function CarRender(allowed_movement) {
 
   // sono nello spazio MACCHINA
   //drawAxis(); // disegno assi spazio macchina
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix);
-  drawObjectTexture(objects, "chassis_body", 2);
+  gl.uniformMatrix4fv(_MVmatrix, false, mo_matrix);
+  //drawObjectTexture(objects, "chassis_body", 2);
+  drawObjectTexture(objects, 'chassis_body',2);  
   drawObjectFill(objects, 'chassis_o', 0, 0, 0);
   //drawObjectWire(objects, 'chassis');
 
@@ -152,10 +153,10 @@ function CarRender(allowed_movement) {
 
   mo_matrix1 = m4.translate(mo_matrix1, -0.58, +raggio - 0.28, +0.8);
   mo_matrix1 = m4.xRotate(mo_matrix1, degToRad(mozzo));
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv(_MVmatrix, false, mo_matrix1);
   //  drawCube();
-  drawObjectFill(objects, 'ruota_posteriore', 0, 0, 0);
-  drawObjectWire(objects, 'ruota_posteriore');
+  drawObjectFill(objects, 'ruota_posteriore');
+  //drawObjectWire(objects, 'ruota_posteriore');
 
   // ruota posteriore D
   mo_matrix1 = m4.copy(mo_matrix);
@@ -165,10 +166,10 @@ function CarRender(allowed_movement) {
 
   mo_matrix1 = m4.translate(mo_matrix1, -0.58, +raggio - 0.28, +0.8);
   mo_matrix1 = m4.xRotate(mo_matrix1, degToRad(mozzo));
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv(_MVmatrix, false, mo_matrix1);
   //  drawCube();
-  drawObjectFill(objects, 'ruota_posteriore', 0, 0, 0);
-  drawObjectWire(objects, 'ruota_posteriore');
+  drawObjectFill(objects, 'ruota_posteriore');
+  //drawObjectWire(objects, 'ruota_posteriore');
 
   // ruota anteriore S
   mo_matrix1 = m4.copy(mo_matrix);
@@ -178,10 +179,10 @@ function CarRender(allowed_movement) {
   mo_matrix1 = m4.translate(mo_matrix1, -0.58, +raggio - 0.28, -0.55);
   mo_matrix1 = m4.yRotate(mo_matrix1, degToRad(sterzo));
   mo_matrix1 = m4.xRotate(mo_matrix1, degToRad(mozzo));
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv(_MVmatrix, false, mo_matrix1);
   //  drawCube();
-  drawObjectFill(objects, 'ruota_anteriore', 0, 0, 0);
-  drawObjectWire(objects, 'ruota_anteriore');
+  drawObjectFill(objects, 'ruota_anteriore');
+  //drawObjectWire(objects, 'ruota_anteriore');
 
   // ruota anteriore D
   mo_matrix1 = m4.copy(mo_matrix);
@@ -192,8 +193,8 @@ function CarRender(allowed_movement) {
   mo_matrix1 = m4.translate(mo_matrix1, -0.58, +raggio - 0.28, -0.55);
   mo_matrix1 = m4.yRotate(mo_matrix1, degToRad(-sterzo));
   mo_matrix1 = m4.xRotate(mo_matrix1, degToRad(mozzo));
-  gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix1);
+  gl.uniformMatrix4fv(_MVmatrix, false, mo_matrix1);
   //  drawCube();
-  drawObjectFill(objects, 'ruota_anteriore', 0, 0, 0);
-  drawObjectWire(objects, 'ruota_anteriore');
+  drawObjectFill(objects, 'ruota_anteriore');
+  //drawObjectWire(objects, 'ruota_anteriore');
 }

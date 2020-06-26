@@ -703,7 +703,8 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 	  //console.log(model)
 	  if(texflag)
 		  mesh.texcoords = getTexCoordsFromModel(model);
-	  
+	  mesh.normals = getNormalsFromModel(model);
+	  //console.log(model);
 	  return mesh;
 	}
 
@@ -730,6 +731,30 @@ Model.prototype.TranslateScale = function(scale, cx, cy, cz)
 			texcoords_face: texcoords_result,
 			texcoords : texcoords
 		};
+	}
+
+	function getNormalsFromModel(model){
+		var triangles = model.triangles;
+		var normals = model.normals.slice(0,model.normals.length-3);
+		
+		 var normals_result = new Array();
+
+		for(let i = 0; i<triangles.length; i++){
+			let cur_tr = triangles[i];
+			let n_indices = cur_tr.nindices;
+			let nor_face = new Array();
+			for(let t=0; t<n_indices.length && n_indices[t]>0; t++){
+				nor_face.push(n_indices[t]); 
+			}
+			normals_result.push({
+				norface: nor_face
+			})
+		}
+
+		return {
+			normals_face: normals_result,
+			normals : normals
+		}; 
 	}
 
 
