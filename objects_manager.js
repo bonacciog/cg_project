@@ -1,9 +1,16 @@
-
+/**
+ * Questo file utilizza la libreria glm_light (prettamente modificata 
+ * per recuperare facce poligonali, normali e tex cord)
+ * e prepara gli oggetti per essere poi disegnati con webgl
+ * 
+ * @author Giovanni Bonaccio 
+ */
 
 /**
  * 
- * Reads from .obj file, loads the mesh 
- * and adds it to the objects list
+ * Apre il file con JQuery.ajax, 
+ * richiama la glm_light che carica obj, 
+ * aggiunge oggetto alla lista di objects
  * @param {*} objects 
  * @param {*} object_name 
  * @param {*} obj_path 
@@ -37,7 +44,6 @@ function addObject(object_name, obj_path, texflag, objects) {
         mesh: mesh,
         vertices: getVertices(mesh),
         indices: getTriangleIndices(mesh),
-        edges: getEdges(mesh),
         texcoords: texflag ? getTexCoords(mesh) : null,
         positions: getPositions(mesh),
         normals: getNormals(mesh)
@@ -48,7 +54,7 @@ function addObject(object_name, obj_path, texflag, objects) {
 
 
 /**
- * Computes triangle indices from mesh
+ * Calcola gli indici delle facce dalla mesh caricata tramite glm_light
  * @param {*} objects 
  * @param {*} object_name 
  */
@@ -70,7 +76,7 @@ function getTriangleIndices(mesh, nome) {
 }
 
 /**
- * 
+ * Riordina tex cord dalla mesh caricata tramite glm_light
  * @param {*} mesh 
  */
 function getTexCoords(mesh) {
@@ -97,7 +103,7 @@ function getTexCoords(mesh) {
 }
 
 /**
- * 
+ * Riordina normali dalla mesh caricata tramite glm_light
  * @param {*} mesh 
  */
 function getNormals(mesh) {
@@ -129,7 +135,7 @@ function getNormals(mesh) {
 
 
 /**
- * 
+ * Riordina position dalla mesh caricata tramite glm_light
  * @param {*} mesh 
  */
 
@@ -145,6 +151,27 @@ function getPositions(mesh) {
 
     return positions;
 }
+
+/**
+ * Ritorna vertici della mesh
+ * @param {*} objects 
+ * @param {*} object_name 
+ */
+function getVertices(mesh) {
+    if (!mesh)
+        return null;
+
+    var vertices = new Array();
+    for (let i = 0; i <= mesh.nvert; i++) {
+        vertices.push(mesh.vert[i].x);
+        vertices.push(mesh.vert[i].y);
+        vertices.push(mesh.vert[i].z);
+    }
+
+    return vertices;
+}
+
+/*================ FUNZIONI AUSILIARIE ALLE FUNZIONI SOPRA ====================== */
 
 /**
  * 
@@ -210,27 +237,9 @@ function splitBy2(array) {
     return result;
 }
 
-/**
- * Returns edge from mesh
- * @param {*} objects 
- * @param {*} object_name 
- */
-function getEdges(mesh) {
-
-    if (!mesh)
-        return null;
-
-    var edges = new Array();
-
-    for (let i = 0; i <= mesh.nedge; i++) {
-        edges.push(mesh.edge[i].vert[0]);
-        edges.push(mesh.edge[i].vert[1]);
-    }
-    return edges;
-}
 
 /**
- * Computes the number of vertex in a given face
+ * 
  * @param {*} face 
  */
 function verticesNumberOnFace(face) {
@@ -242,27 +251,10 @@ function verticesNumberOnFace(face) {
     return count;
 }
 
-/**
- * Returns vertices from mesh
- * @param {*} objects 
- * @param {*} object_name 
- */
-function getVertices(mesh) {
-    if (!mesh)
-        return null;
 
-    var vertices = new Array();
-    for (let i = 0; i <= mesh.nvert; i++) {
-        vertices.push(mesh.vert[i].x);
-        vertices.push(mesh.vert[i].y);
-        vertices.push(mesh.vert[i].z);
-    }
-
-    return vertices;
-}
 
 /**
- * Returns the object mesh using name as parameter
+ * 
  * @param {*} objects 
  * @param {*} object_name 
  */
@@ -275,7 +267,7 @@ function getObjectByName(objects, object_name) {
 
 
 /**
- * Generates an array of random colors
+ * 
  * @param {*} vertices 
  */
 function myMakeRandomVertexColors(vertices) {
@@ -289,7 +281,7 @@ function myMakeRandomVertexColors(vertices) {
 }
 
 /**
- * Generates an array of given colors
+ * 
  * @param {*} vertices 
  * @param {*} r 
  * @param {*} g 

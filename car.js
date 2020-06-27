@@ -69,6 +69,8 @@ function CarDoStep() {
   px += vx;
   py += vy;
   pz += vz;
+
+
 }
 
 //function drawCube(); // questa e' definita altrove (quick hack)
@@ -113,6 +115,8 @@ function CarInit() {
     raggioRuotaP = 0.30; */
 
   grip = 0.45; // quanto il facing macchina si adegua velocemente allo sterzo
+
+
 }
 // disegna carlinga composta da 1 cubo traslato e scalato
 /* function drawCarlinga(model_matrix) {
@@ -197,4 +201,6 @@ function CarRender(allowed_movement) {
   //  drawCube();
   drawObjectFill(objects, 'ruota_anteriore');
   //drawObjectWire(objects, 'ruota_anteriore');
+
+
 }

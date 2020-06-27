@@ -1,3 +1,17 @@
+/**
+ * Questo file gestisce la posizione e l'obiettivo di tutte
+ * le possibili telecamere nel gioco:
+ * -default: segue l'auto stando sempre dietro a essa
+ * -highstatic: smette di muoversi, quindi rimane ferma puntando l'auto (utile per il parcheggio)
+ * -oncar: segue l'auto e si trova sul tettuccio
+ * -debug: non segue l'auto e si trova in alto puntando la pista, utile per una fase di debug.
+ *         Con i tasti numerici 5,2,1,3 (a destra della tastiera) si può muovere la camera.
+ *         Inoltre questa modalità risponde alla modifica dei valori di PHI, THETA e D usando i 
+ *         i tasti nella pagina o il mouse (cliccando e muovendo). 
+ * 
+ * @author Giovanni Bonaccio 
+ */
+
 var cx,cz;
 var keyCamera;
 
@@ -5,6 +19,7 @@ function initDebugCamera(){
     cx=cz=0;
     keyCamera = [false,false,false,false];
     D=80; PHI=degToRad(90); THETA=degToRad(90);
+
 }
 
 var setCamera = {

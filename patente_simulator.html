@@ -49,8 +49,9 @@
 
 <body>
     <p>
-        <button id="camera">Change camera</button>
-        <button id="reset">Reset game</button>
+        <button id="camera">CHANGE CAMERA</button>
+        <button id="reset">RESET GAME</button>
+        <button id="panel">OPEN PANEL</button>
     </p>
     <p>
         <button id="Button1">Increase D</button>
@@ -68,14 +69,17 @@
     </p>
 
     <p>
-        <button id="check">Check Parking</button>
-    </p>
-
-    <p>
         <button id="LIGHT_ON">LIGHT ON</button>
-        <button id="LIGHT_DOWN">LIGHT DOWN</button>
+        <button id="LIGHT_BACK">LIGHT BACK</button>
         <button id="LIGHT_LEFT">LIGHT LEFT</button>
         <button id="LIGHT_RIGHT">LIGHT RIGHT</button>
+        <button id="LIGHT_UP">LIGHT UP</button>
+        <button id="LIGHT_DOWN">LIGHT DOWN</button>
+    </p>
+
+
+    <p>
+        <button id="check">CHECK PARKING</button>
     </p>
 
     <div class="container">
@@ -184,7 +188,15 @@
         <script type="text/javascript" src="environment.js"></script>
         <script>
 
+
+            /*
+            *
+            * 
+            * Disegna un oggetto recuperando vertici, normali e facce applicando solo il colore
+            *   
+            */
             function drawObjectFill(objects, object_name, r, g, b) {
+
                 var current_object = getObjectByName(objects, object_name);
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
@@ -222,8 +234,14 @@
                 gl.drawElements(gl.TRIANGLES, current_object.indices.length, gl.UNSIGNED_SHORT, 0);
 
             }
-
+            /*
+            *
+            * 
+            * Disegna un oggetto recuperando positions, normali e tex cord applicando texture
+            *   
+            */
             function drawObjectTexture(objects, object_name, tex_index) {
+
                 var current_object = getObjectByName(objects, object_name);
 
 
@@ -273,36 +291,6 @@
             }
 
 
-            function drawObjectWire(objects, object_name) {
-                var current_object = getObjectByName(objects, object_name);
-
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
-                gl.bufferData(gl.ARRAY_BUFFER,
-                    new Float32Array(current_object.vertices), gl.STATIC_DRAW);
-                gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
-                gl.enableVertexAttribArray(_position);
-
-                // true
-                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 0.0);
-
-                var colors = makeGivenVertexColors(current_object.vertices, 0, 0, 0)
-                gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
-                gl.bufferData(gl.ARRAY_BUFFER,
-                    new Float32Array(colors), gl.STATIC_DRAW);
-                gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
-                gl.enableVertexAttribArray(_color);
-
-
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, edge_buffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
-                    new Uint16Array(current_object.edges), gl.STATIC_DRAW);
-
-                gl.drawElements(gl.LINES, current_object.edges.length, gl.UNSIGNED_SHORT, 0);
-
-            }
-
-            var mo_matrix, mo_matrix1;
-
             /*============= Creating a canvas ======================*/
             var canvas = document.getElementById('my_Canvas');
             var gl = canvas.getContext('webgl');
@@ -317,6 +305,8 @@
             var textures = new Array();
             var images = new Array();
 
+            // CHIAMO LA FUNZIONE addObject DEL FILE object_manager CHE CARICA UN
+            // OBJ E LO AGGIUNGE A UNA LISTA DI OBJECTS (VEDI FILE)
             objects = new Array();
             addObject('chassis_body', './resources/data/chassis_t.obj', true, objects);
             addObject('chassis_o', './resources/data/chassis_o.obj', false, objects);
@@ -356,6 +346,8 @@
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices3), gl.STATIC_DRAW);
 
             function drawFloor() {
+
+
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
@@ -380,9 +372,8 @@
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer3);
                 gl.drawElements(gl.TRIANGLES, indices3.length, gl.UNSIGNED_SHORT, 0);
             }
+
             /*================================================================*/
-
-
 
             var vertex_buffer = gl.createBuffer();
             var index_buffer = gl.createBuffer();
@@ -414,7 +405,6 @@
             /*======== Associating attributes to vertex shader =====*/
             var _Pmatrix = gl.getUniformLocation(shaderprogram, "Pmatrix");
             var _MVmatrix = gl.getUniformLocation(shaderprogram, "modelViewMatrix");
-            //var _Mmatrix = gl.getUniformLocation(shaderprogram, "Mmatrix");
             var _position = gl.getAttribLocation(shaderprogram, "position");
             var _color = gl.getAttribLocation(shaderprogram, "color");
             var texcoordLocation = gl.getAttribLocation(shaderprogram, "a_texcoord");
@@ -425,7 +415,7 @@
             gl.useProgram(shaderprogram);
 
 
-            /*================ WEBGL FUNDAMENTALS TEXTURE FUNCTIONS =================*/
+            /*================ WEBGL FUNDAMENTALS IMAGE LOADING FUNCTIONS =================*/
 
             function loadImage(url, callback) {
                 var image = new Image();
@@ -454,37 +444,17 @@
             }
 
             function prepareTextures(length) {
-                // create 2 textures
-                //console.log(images)
                 for (var ii = 0; ii < length; ++ii) {
                     var texture = gl.createTexture();
                     gl.bindTexture(gl.TEXTURE_2D, texture);
-
-
-
-                    // Check if the image is a power of 2 in both dimensions.
-                    if (isPowerOf2(images[ii].width) && isPowerOf2(images[ii].height)) {
-                        // Yes, it's a power of 2. Generate mips.
-                        gl.generateMipmap(gl.TEXTURE_2D);
-                        //console.log('mipmap');
-                    } else {
-                        // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                    }
-                    // Upload the image into the texture.
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[ii]);
-                    // add the texture to the array of textures.
                     textures.push(texture);
                 }
             }
             /*=======================================================================*/
-
-
-            function isPowerOf2(value) {
-                return (value & (value - 1)) === 0;
-            }
 
             function degToRad(d) {
                 return d * Math.PI / 180;
@@ -522,6 +492,7 @@
                 else
                     camera_type = cameras[camera_index + 1];
 
+
             };
 
             document.getElementById("reset").onclick = function () {
@@ -546,10 +517,16 @@
             document.getElementById("RIGHT").onmousedown = function () { key[3] = true };
 
             document.getElementById("LIGHT_ON").onclick = function () { lightPosition[2] = lightPosition[2] - 30; };
-            document.getElementById("LIGHT_DOWN").onclick = function () { lightPosition[2] = lightPosition[2] + 30; };
+            document.getElementById("LIGHT_BACK").onclick = function () { lightPosition[2] = lightPosition[2] + 30; };
             document.getElementById("LIGHT_LEFT").onclick = function () { lightPosition[0] = lightPosition[0] - 30; };
             document.getElementById("LIGHT_RIGHT").onclick = function () { lightPosition[0] = lightPosition[0] + 30; };
+            document.getElementById("LIGHT_UP").onclick = function () { lightPosition[1] = lightPosition[1] - 30; };
+            document.getElementById("LIGHT_DOWN").onclick = function () { lightPosition[1] = lightPosition[1] + 30; };
 
+
+            document.getElementById("panel").onclick = function () {
+                open_panel = !(open_panel);
+            }
 
             document.getElementById("check").onmousedown = function () {
                 if (checkWin(px, pz)) {
@@ -564,7 +541,7 @@
             canvas.onmousemove = mouseMove;
             window.addEventListener('keydown', doKeyDown, true);
             window.addEventListener('keyup', doKeyUp, true);
-            /*=================== Drawing =================== */
+            
 
             function doKeyDown(e) {
                 //====================
@@ -637,6 +614,7 @@
                 if (e.keyCode == 99) keyCamera[3] = false;
             }
 
+            /*=================== Drawing =================== */
 
 
             //definizione parametri iniziali
@@ -650,7 +628,16 @@
             var camera, dst, cameraMatrix, camera_type;
             var end, endText, text_pos_x;
 
+            var open_panel;
+
+           /*
+           *
+           * Resetta tutti i parametri della scena, chiamando le relative funzioni per ogni
+           * elemento della scena (VEDI RISPETTIVI FILE)
+           * 
+           */
             var ResetScene = function () {
+
                 var srcs = [
                     "./resources/images/strada.jpg",
                     "./resources/images/MyFoto.png",
@@ -691,6 +678,10 @@
 
                 camera_type = 'default';
 
+                open_panel = false;
+
+        
+
                 initDebugCamera();
                 CarInit();
 
@@ -712,7 +703,7 @@
 
 
             var render = async function () {
-                //console.log(px,pz)
+
                 if (checkEnvironmentLimit(px, pz) && !end) {
                     updateCheckpoint(px, pz);
                     //set projection matrix
@@ -732,14 +723,6 @@
                     gl.clearDepth(1.0);
                     gl.viewport(0.0, 0.0, canvas.width, canvas.height);
                     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-                    /* gl.uniformMatrix4fv(_Pmatrix, false, proj_matrix);
-                    gl.uniformMatrix4fv(_Vmatrix, false, view_matrix);
-                    //set model matrix to I4
-
-                    mo_matrix = m4.identity();
-
-
-                    gl.uniformMatrix4fv(_Mmatrix, false, mo_matrix); */
 
 
 
@@ -753,16 +736,33 @@
                     RoadRender();
 
 
-                    ctx.font = '40pt Calibri';
+                    ctx.font = '30pt Calibri';
                     ctx.fillStyle = 'green';
-                    ctx.fillText('PATENTE', 120, 50);
-                    ctx.font = '20pt Calibri';
-                    ctx.fillStyle = 'black';
-                    ctx.fillText('RESTA IN STRADA, EVITA CONI, PARCHEGGIA', 2, 100);
+                    ctx.fillText('PATENTE SIMULATOR', 80, 50);
+                    if (open_panel){
+                        var message;
+                        if(checkpoint>=0 && checkpoint <9)
+                            message='RESTA IN STRADA!'
+                        else if (checkpoint===9)
+                            message=' EVITA I CONI!'
+                        else 
+                            message='  PARCHEGGIA!'
+
+                        ctx.font = '15pt Calibri';
+                        ctx.fillStyle = 'red';
+                        ctx.fillText('W o UP per accelerare, S o DOWN per decelerare', 20, 64);
+                        ctx.fillText('A o RIGHT per destra, D o LEFT per sinistra' , 20, 80);
+
+                        ctx.font = '20pt Calibri';
+                        ctx.fillStyle = 'black';
+                        ctx.fillText(message, 130, 100);
+                    }
+
+                    
 
                 }
                 else {
-                    //console.log(px,pz);
+                    
                     end = true;
                     window.removeEventListener('keydown', doKeyDown, true);
                     window.removeEventListener('keyup', doKeyUp, true);
@@ -772,6 +772,7 @@
                 }
             }
 
+            // SUL MIO PORTATILE USANDO 30 ANDAVA A SCATTI, PERCIO HO RIDOTTO GLI FPS
             const FRAMES_PER_SECOND = 20;  // Valid values are 60,30,20,15,10...
             // set the mim time to render the next frame
             const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
