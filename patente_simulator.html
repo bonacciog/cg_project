@@ -233,6 +233,9 @@
 
                 gl.drawElements(gl.TRIANGLES, current_object.indices.length, gl.UNSIGNED_SHORT, 0);
 
+                gl.disableVertexAttribArray(_position);
+                gl.disableVertexAttribArray(_color);
+
             }
             /*
             *
@@ -247,12 +250,12 @@
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
-                    m4.flatten(current_object.positions), gl.STATIC_DRAW);
+                new Float32Array(current_object.positions), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, m4.flatten(current_object.normals), gl.STATIC_DRAW);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(current_object.normals), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(vNormal);
 
@@ -288,6 +291,10 @@
                 gl.uniform1f(gl.getUniformLocation(shaderprogram, "shininess"), materialShininess);
 
                 gl.drawArrays(gl.TRIANGLES, 0, current_object.positions.length / 3);
+
+                gl.disableVertexAttribArray(_position);
+                gl.disableVertexAttribArray(vNormal);
+                gl.disableVertexAttribArray(texcoordLocation);
             }
 
 
@@ -371,6 +378,10 @@
 
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer3);
                 gl.drawElements(gl.TRIANGLES, indices3.length, gl.UNSIGNED_SHORT, 0);
+
+                gl.disableVertexAttribArray(_position);
+                gl.disableVertexAttribArray(_color);
+
             }
 
             /*================================================================*/
@@ -773,7 +784,7 @@
             }
 
             // SUL MIO PORTATILE USANDO 30 ANDAVA A SCATTI, PERCIO HO RIDOTTO GLI FPS
-            const FRAMES_PER_SECOND = 20;  // Valid values are 60,30,20,15,10...
+            const FRAMES_PER_SECOND = 10;  // Valid values are 60,30,20,15,10...
             // set the mim time to render the next frame
             const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
             var lastFrameTime = 0;  // the last frame time
