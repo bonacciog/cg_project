@@ -639,10 +639,9 @@ function checkObstacles(car_center) {
     let isDistant = true;
     for (let i = 0; i < obstacles.length; i++) {
         let current_origin = [obstacles[i].x, obstacles[i].z];
-        if (distance(car_center, current_origin) < raggio_cono + raggio_auto) {
+        if (distance(car_center, current_origin) < raggio_cono + raggio_auto) 
             isDistant = false;
-            console.log(isDistant, distance(car_center, current_origin));
-        }
+        
 
     }
 
@@ -750,13 +749,8 @@ function check_Curve_4(pos_cofano, pos_bag) {
 
 function check_StraightRoad_4(pos_cofano, pos_bag) {
     let x_bound = [-Infinity, -79];
-    let z_bound = [-289, -302]
+    let z_bound = [-289, -302];
 
-    if(!(pos_cofano[0] >= x_bound[0] && pos_cofano[0] <= x_bound[1]
-        && pos_cofano[1] <= z_bound[0] && pos_cofano[1] >= z_bound[1]
-        && pos_bag[0] >= x_bound[0] && pos_bag[0] <= x_bound[1]
-        && pos_bag[1] <= z_bound[0] && pos_bag[1] >= z_bound[1]))
-        console.log(pos_bag, pos_cofano)
     return pos_cofano[0] >= x_bound[0] && pos_cofano[0] <= x_bound[1]
         && pos_cofano[1] <= z_bound[0] && pos_cofano[1] >= z_bound[1]
         && pos_bag[0] >= x_bound[0] && pos_bag[0] <= x_bound[1]
@@ -806,7 +800,6 @@ function distance(p1, p2) {
 function checkWin(px,pz){
     let parking_slot_x = [-370, -363];
     let parking_slot_z = [-266, -282]
-    console.log(px,pz)
     /* =================================== COFANO ==========================================*/
     // Rotazione rispetto a un punto
     // traslo nell'origine

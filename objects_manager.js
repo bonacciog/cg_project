@@ -38,7 +38,6 @@ function addObject(object_name, obj_path, texflag, objects) {
     // add edge
     mesh = LoadSubdivMesh(mesh);
 
-
     objects.push({
         name: object_name,
         mesh: mesh,
@@ -272,7 +271,7 @@ function getObjectByName(objects, object_name) {
  */
 function myMakeRandomVertexColors(vertices) {
     var colors = new Array();
-    for (let i = 0; i + 3 < vertices.length; i = i + 3) {
+    for (let i = 0; i < vertices.length; i = i + 3) {
         colors.push(Math.round((Math.random())));
         colors.push(Math.round((Math.random())));
         colors.push(Math.round((Math.random())));
@@ -290,7 +289,7 @@ function myMakeRandomVertexColors(vertices) {
 function makeGivenVertexColors(vertices, r, g, b) {
 
     var colors = new Array();
-    for (let i = 0; i + 3 < vertices.length; i = i + 3) {
+    for (let i = 0; i < vertices.length; i = i + 3) {
         colors.push(r);
         colors.push(g);
         colors.push(b);

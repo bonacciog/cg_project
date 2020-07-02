@@ -89,6 +89,8 @@
 
         <script id="vertex-shader" type="not-javascript">
             attribute  vec4 position;
+            attribute  vec4 vertex_position;
+
             uniform mat4 Pmatrix; 
             uniform mat4 modelViewMatrix;
             //uniform mat4 Mmatrix;
@@ -111,7 +113,11 @@
             uniform float shininess;
 
             void main(void) { //pre-built function
-                vec3 pos = -(modelViewMatrix * position).xyz;
+                vec3 pos;
+                if(isColor == 0.0)
+                    pos = -(modelViewMatrix * vertex_position).xyz;
+                else
+                    pos = -(modelViewMatrix * position).xyz;
                 //fixed light postion
     
                 vec3 light = lightPosition.xyz;
@@ -140,8 +146,10 @@
                 specular = vec4(0.0, 0.0, 0.0, 1.0);
                 } 
 
-
-              gl_Position = Pmatrix*modelViewMatrix * position;
+              if(isColor == 0.0)
+                    gl_Position = Pmatrix*modelViewMatrix * vertex_position;
+              else
+                    gl_Position = Pmatrix*modelViewMatrix * position;
               v_texcoord = a_texcoord;
               vColor = color;
               f_isColor = isColor;
@@ -169,7 +177,7 @@
             void main(void) {
                 if(f_isColor == 0.0)
                     gl_FragColor =  vec4(vColor, 1.)*fColor;
-                if(f_isColor == 1.0)
+                else
                   gl_FragColor =  texture2D(u_texture0, v_texcoord)*fColor;
             }
             </script>
@@ -197,24 +205,30 @@
             */
             function drawObjectFill(objects, object_name, r, g, b) {
 
+
+
+
                 var current_object = getObjectByName(objects, object_name);
+
+                
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
                     new Float32Array(current_object.vertices), gl.STATIC_DRAW);
-                gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
-                gl.enableVertexAttribArray(_position);
-
-
-                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 0.0);
+                gl.vertexAttribPointer(_vertex_position, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(_vertex_position);
 
                 var colors = makeGivenVertexColors(current_object.vertices, r, g, b)
+
                 gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
                     new Float32Array(colors), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_color);
 
+           
+
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 0.0);
 
                 ambientProduct = m4.mvec4(lightAmbient, materialAmbient);
                 diffuseProduct = m4.mvec4(lightDiffuse, materialDiffuse);
@@ -227,13 +241,16 @@
                 gl.uniform1f(gl.getUniformLocation(shaderprogram, "shininess"), materialShininess);
 
 
+
+
+
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
                     new Uint16Array(current_object.indices), gl.STATIC_DRAW);
 
                 gl.drawElements(gl.TRIANGLES, current_object.indices.length, gl.UNSIGNED_SHORT, 0);
 
-                gl.disableVertexAttribArray(_position);
+                gl.disableVertexAttribArray(_vertex_position);
                 gl.disableVertexAttribArray(_color);
 
             }
@@ -246,11 +263,12 @@
             function drawObjectTexture(objects, object_name, tex_index) {
 
                 var current_object = getObjectByName(objects, object_name);
+                // true
 
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
                 gl.bufferData(gl.ARRAY_BUFFER,
-                new Float32Array(current_object.positions), gl.STATIC_DRAW);
+                    new Float32Array(current_object.positions), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_position);
 
@@ -258,6 +276,8 @@
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(current_object.normals), gl.STATIC_DRAW);
                 gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(vNormal);
+
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 1.0);
 
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
@@ -267,8 +287,6 @@
                 // Turn on the teccord attribute
                 gl.enableVertexAttribArray(texcoordLocation);
 
-                // Bind the position buffer.
-                gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer);
 
                 // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
                 gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
@@ -277,8 +295,7 @@
                 gl.uniform1i(texture0_Location, 0);
                 gl.bindTexture(gl.TEXTURE_2D, textures[tex_index]);
 
-                // true
-                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 1.0);
+
 
                 ambientProduct = m4.mvec4(lightAmbient, materialAmbient);
                 diffuseProduct = m4.mvec4(lightDiffuse, materialDiffuse);
@@ -309,7 +326,7 @@
 
             var objects;
 
-            var textures = new Array();
+            var textures;
             var images = new Array();
 
             // CHIAMO LA FUNZIONE addObject DEL FILE object_manager CHE CARICA UN
@@ -326,7 +343,7 @@
             addObject('cono', './resources/data/cono.obj', false, objects);
             addObject('casa', './resources/data/Build.obj', true, objects);
 
-            console.log(objects)
+            
 
             /*================ PIANO SU CUI GIACE L'AUTO ==================*/
             const S = 1000; // size
@@ -356,15 +373,18 @@
 
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer3);
-                gl.vertexAttribPointer(_position, 3, gl.FLOAT, false, 0, 0);
-                gl.enableVertexAttribArray(_position);
+                gl.vertexAttribPointer(_vertex_position, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(_vertex_position);
 
-                // true
-                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 0.0);
+
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer3);
                 gl.vertexAttribPointer(_color, 3, gl.FLOAT, false, 0, 0);
                 gl.enableVertexAttribArray(_color);
+
+                // true
+                gl.uniform1f(gl.getUniformLocation(shaderprogram, "isColor"), 0.0);
+
 
                 ambientProduct = m4.mvec4(lightAmbient, materialAmbient);
                 diffuseProduct = m4.mvec4(lightDiffuse, materialDiffuse);
@@ -379,7 +399,7 @@
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer3);
                 gl.drawElements(gl.TRIANGLES, indices3.length, gl.UNSIGNED_SHORT, 0);
 
-                gl.disableVertexAttribArray(_position);
+                gl.disableVertexAttribArray(_vertex_position);
                 gl.disableVertexAttribArray(_color);
 
             }
@@ -417,6 +437,7 @@
             var _Pmatrix = gl.getUniformLocation(shaderprogram, "Pmatrix");
             var _MVmatrix = gl.getUniformLocation(shaderprogram, "modelViewMatrix");
             var _position = gl.getAttribLocation(shaderprogram, "position");
+            var _vertex_position = gl.getAttribLocation(shaderprogram, "vertex_position");
             var _color = gl.getAttribLocation(shaderprogram, "color");
             var texcoordLocation = gl.getAttribLocation(shaderprogram, "a_texcoord");
             var texture0_Location = gl.getUniformLocation(shaderprogram, "u_texture0");
@@ -456,13 +477,14 @@
 
             function prepareTextures(length) {
                 for (var ii = 0; ii < length; ++ii) {
-                    var texture = gl.createTexture();
+                    var texture = textures[ii];
                     gl.bindTexture(gl.TEXTURE_2D, texture);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[ii]);
+
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, images[ii]);
-                    textures.push(texture);
+                    textures[ii] = texture;
                 }
             }
             /*=======================================================================*/
@@ -542,7 +564,7 @@
             document.getElementById("check").onmousedown = function () {
                 if (checkWin(px, pz)) {
                     endText = 'HAI PRESO LA PATENTE';
-                    text_pos_x = 10;
+                    text_pos_x = 0;
                     end = true;
                 }
             }
@@ -552,7 +574,7 @@
             canvas.onmousemove = mouseMove;
             window.addEventListener('keydown', doKeyDown, true);
             window.addEventListener('keyup', doKeyUp, true);
-            
+
 
             function doKeyDown(e) {
                 //====================
@@ -641,14 +663,16 @@
 
             var open_panel;
 
-           /*
-           *
-           * Resetta tutti i parametri della scena, chiamando le relative funzioni per ogni
-           * elemento della scena (VEDI RISPETTIVI FILE)
-           * 
-           */
-            var ResetScene = function () {
 
+
+            /*
+            *
+            * Resetta tutti i parametri della scena, chiamando le relative funzioni per ogni
+            * elemento della scena (VEDI RISPETTIVI FILE)
+            * 
+            */
+            var ResetScene = function () {
+                textures = new Array();
                 var srcs = [
                     "./resources/images/strada.jpg",
                     "./resources/images/MyFoto.png",
@@ -660,6 +684,15 @@
                     "./resources/images/casa2.jpg",
                     "./resources/images/casa3.jpg"
                 ];
+
+                for (let i = 0; i < srcs.length; i++) {
+                    var texture = gl.createTexture();
+                    gl.bindTexture(gl.TEXTURE_2D, texture);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                        new Uint8Array([0, 0, 255, 255]));
+                    textures.push(texture);
+                }
+
                 loadImages(
                     srcs,
                     prepareTextures
@@ -691,7 +724,7 @@
 
                 open_panel = false;
 
-        
+
 
                 initDebugCamera();
                 CarInit();
@@ -749,42 +782,42 @@
 
                     ctx.font = '30pt Calibri';
                     ctx.fillStyle = 'green';
-                    ctx.fillText('PATENTE SIMULATOR', 80, 50);
-                    if (open_panel){
+                    ctx.fillText('PATENTE SIMULATOR', 50, 50);
+                    if (open_panel) {
                         var message;
-                        if(checkpoint>=0 && checkpoint <9)
-                            message='RESTA IN STRADA!'
-                        else if (checkpoint===9)
-                            message=' EVITA I CONI!'
-                        else 
-                            message='  PARCHEGGIA!'
+                        if (checkpoint >= 0 && checkpoint < 9)
+                            message = 'RESTA IN STRADA!'
+                        else if (checkpoint === 9)
+                            message = ' EVITA I CONI!'
+                        else
+                            message = '  PARCHEGGIA!'
 
                         ctx.font = '15pt Calibri';
                         ctx.fillStyle = 'red';
                         ctx.fillText('W o UP per accelerare, S o DOWN per decelerare', 20, 64);
-                        ctx.fillText('A o RIGHT per destra, D o LEFT per sinistra' , 20, 80);
+                        ctx.fillText('A o RIGHT per destra, D o LEFT per sinistra', 20, 80);
 
                         ctx.font = '20pt Calibri';
                         ctx.fillStyle = 'black';
                         ctx.fillText(message, 130, 100);
                     }
 
-                    
+
 
                 }
                 else {
-                    
+
                     end = true;
                     window.removeEventListener('keydown', doKeyDown, true);
                     window.removeEventListener('keyup', doKeyUp, true);
-                    ctx.font = '40pt Calibri';
+                    ctx.font = '30pt Calibri';
                     ctx.fillStyle = 'red';
-                    ctx.fillText(endText, text_pos_x, 150);
+                    ctx.fillText(endText, text_pos_x, 120);
                 }
             }
 
             // SUL MIO PORTATILE USANDO 30 ANDAVA A SCATTI, PERCIO HO RIDOTTO GLI FPS
-            const FRAMES_PER_SECOND = 10;  // Valid values are 60,30,20,15,10...
+            const FRAMES_PER_SECOND = 30;  // Valid values are 60,30,20,15,10...
             // set the mim time to render the next frame
             const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
             var lastFrameTime = 0;  // the last frame time
