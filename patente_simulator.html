@@ -82,6 +82,7 @@
         <button id="check">CHECK PARKING</button>
     </p>
 
+
     <div class="container">
         <canvas width="600" height="600" id="my_Canvas"></canvas>
         <!-- to manage text on canvas and webgl -->
@@ -556,7 +557,6 @@
             document.getElementById("LIGHT_UP").onclick = function () { lightPosition[1] = lightPosition[1] - 30; };
             document.getElementById("LIGHT_DOWN").onclick = function () { lightPosition[1] = lightPosition[1] + 30; };
 
-
             document.getElementById("panel").onclick = function () {
                 open_panel = !(open_panel);
             }
@@ -565,6 +565,7 @@
                 if (checkWin(px, pz)) {
                     endText = 'HAI PRESO LA PATENTE';
                     text_pos_x = 0;
+                    color = 'green'
                     end = true;
                 }
             }
@@ -663,7 +664,7 @@
 
             var open_panel;
 
-
+            var color;
 
             /*
             *
@@ -722,9 +723,11 @@
 
                 camera_type = 'default';
 
+                color = 'red';
+
                 open_panel = false;
 
-
+                
 
                 initDebugCamera();
                 CarInit();
@@ -773,6 +776,7 @@
                     mo_matrix = m4.identity();
                     gl.uniformMatrix4fv(_Pmatrix, false, proj_matrix);
                     gl.uniformMatrix4fv(_MVmatrix, false, mo_matrix);
+
                     drawFloor();
 
 
@@ -811,12 +815,12 @@
                     window.removeEventListener('keydown', doKeyDown, true);
                     window.removeEventListener('keyup', doKeyUp, true);
                     ctx.font = '30pt Calibri';
-                    ctx.fillStyle = 'red';
+                    ctx.fillStyle = color;
                     ctx.fillText(endText, text_pos_x, 120);
                 }
             }
 
-            // SUL MIO PORTATILE USANDO 30 ANDAVA A SCATTI, PERCIO HO RIDOTTO GLI FPS
+            
             const FRAMES_PER_SECOND = 30;  // Valid values are 60,30,20,15,10...
             // set the mim time to render the next frame
             const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
