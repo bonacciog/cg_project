@@ -8,7 +8,7 @@ It's simulation of taking driving license.
 
 Before starting, it needs a local python server:
 
-    cd *path_to_project_folder*
+    cd path_to_project_folder
     python3 -m http.server 8000
 
 Then go to http://localhost:800/patente_simulator.html with a browser (Google Chrome is suggested).
